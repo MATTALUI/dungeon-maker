@@ -34,6 +34,25 @@ func GenerateDungeon() Dungeon {
   return dungeon
 }
 
+func GenerateFlatDungeon() Dungeon {
+  var dungeon Dungeon
+
+  validDungeon := false
+  for !validDungeon {
+    validDungeon = true
+    dungeon = GenerateDungeon()
+
+    // For this experiment, we don't want any dungeons with depth
+    for _, room := range dungeon.RoomRegister {
+      if room.Coords.Z > 0 {
+        validDungeon = false
+      }
+    }
+  }
+
+  return dungeon
+}
+
 type Dungeon struct {
   StartingRoom *Room;
   Rooms []*Room;
