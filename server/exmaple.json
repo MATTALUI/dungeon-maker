@@ -1,0 +1,268 @@
+{
+  "StartingRoom": {
+    "id": "9c162a8e-d028-431c-872e-c4e9ad7b515f",
+    "isFirstRoom": true,
+    "entrance": "Down",
+    "dimensions": {
+      "width": 0,
+      "height": 0
+    },
+    "coordinates": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "Up": "cf2fd796-a5d1-4aea-adcc-7a80ae7d4fe6",
+    "Down": "",
+    "Left": "d586bb18-0290-49e7-a17d-a384df5ec1ad",
+    "Right": ""
+  },
+  "rooms": [{
+    "id": "9c162a8e-d028-431c-872e-c4e9ad7b515f",
+    "isFirstRoom": true,
+    "entrance": "Down",
+    "dimensions": {
+      "width": 0,
+      "height": 0
+    },
+    "coordinates": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "Up": "cf2fd796-a5d1-4aea-adcc-7a80ae7d4fe6",
+    "Down": "",
+    "Left": "d586bb18-0290-49e7-a17d-a384df5ec1ad",
+    "Right": ""
+  }, {
+    "id": "cf2fd796-a5d1-4aea-adcc-7a80ae7d4fe6",
+    "isFirstRoom": false,
+    "entrance": "",
+    "dimensions": {
+      "width": 0,
+      "height": 0
+    },
+    "coordinates": {
+      "x": 0,
+      "y": 1,
+      "z": 0
+    },
+    "Up": "63665fff-6074-498b-ae80-e2ac7a149963",
+    "Down": "9c162a8e-d028-431c-872e-c4e9ad7b515f",
+    "Left": "",
+    "Right": ""
+  }, {
+    "id": "63665fff-6074-498b-ae80-e2ac7a149963",
+    "isFirstRoom": false,
+    "entrance": "",
+    "dimensions": {
+      "width": 0,
+      "height": 0
+    },
+    "coordinates": {
+      "x": 0,
+      "y": 2,
+      "z": 0
+    },
+    "Up": "",
+    "Down": "cf2fd796-a5d1-4aea-adcc-7a80ae7d4fe6",
+    "Left": "",
+    "Right": ""
+  }, {
+    "id": "d586bb18-0290-49e7-a17d-a384df5ec1ad",
+    "isFirstRoom": false,
+    "entrance": "",
+    "dimensions": {
+      "width": 0,
+      "height": 0
+    },
+    "coordinates": {
+      "x": -1,
+      "y": 0,
+      "z": 0
+    },
+    "Up": "7e76026f-84ae-4354-82d7-6376a593c21e",
+    "Down": "803627d8-372f-4103-a1ae-161d2b1d099a",
+    "Left": "c175b600-4588-4549-9dac-b38c068de201",
+    "Right": "9c162a8e-d028-431c-872e-c4e9ad7b515f"
+  }, {
+    "id": "803627d8-372f-4103-a1ae-161d2b1d099a",
+    "isFirstRoom": false,
+    "entrance": "",
+    "dimensions": {
+      "width": 0,
+      "height": 0
+    },
+    "coordinates": {
+      "x": -1,
+      "y": -1,
+      "z": 0
+    },
+    "Up": "d586bb18-0290-49e7-a17d-a384df5ec1ad",
+    "Down": "",
+    "Left": "",
+    "Right": ""
+  }, {
+    "id": "c175b600-4588-4549-9dac-b38c068de201",
+    "isFirstRoom": false,
+    "entrance": "",
+    "dimensions": {
+      "width": 0,
+      "height": 0
+    },
+    "coordinates": {
+      "x": -2,
+      "y": 0,
+      "z": 0
+    },
+    "Up": "",
+    "Down": "",
+    "Left": "",
+    "Right": "d586bb18-0290-49e7-a17d-a384df5ec1ad"
+  }, {
+    "id": "7e76026f-84ae-4354-82d7-6376a593c21e",
+    "isFirstRoom": false,
+    "entrance": "",
+    "dimensions": {
+      "width": 0,
+      "height": 0
+    },
+    "coordinates": {
+      "x": -1,
+      "y": 1,
+      "z": 0
+    },
+    "Up": "",
+    "Down": "d586bb18-0290-49e7-a17d-a384df5ec1ad",
+    "Left": "",
+    "Right": ""
+  }],
+  "index": {
+    "63665fff-6074-498b-ae80-e2ac7a149963": {
+      "id": "63665fff-6074-498b-ae80-e2ac7a149963",
+      "isFirstRoom": false,
+      "entrance": "",
+      "dimensions": {
+        "width": 0,
+        "height": 0
+      },
+      "coordinates": {
+        "x": 0,
+        "y": 2,
+        "z": 0
+      },
+      "Up": "",
+      "Down": "cf2fd796-a5d1-4aea-adcc-7a80ae7d4fe6",
+      "Left": "",
+      "Right": ""
+    },
+    "7e76026f-84ae-4354-82d7-6376a593c21e": {
+      "id": "7e76026f-84ae-4354-82d7-6376a593c21e",
+      "isFirstRoom": false,
+      "entrance": "",
+      "dimensions": {
+        "width": 0,
+        "height": 0
+      },
+      "coordinates": {
+        "x": -1,
+        "y": 1,
+        "z": 0
+      },
+      "Up": "",
+      "Down": "d586bb18-0290-49e7-a17d-a384df5ec1ad",
+      "Left": "",
+      "Right": ""
+    },
+    "803627d8-372f-4103-a1ae-161d2b1d099a": {
+      "id": "803627d8-372f-4103-a1ae-161d2b1d099a",
+      "isFirstRoom": false,
+      "entrance": "",
+      "dimensions": {
+        "width": 0,
+        "height": 0
+      },
+      "coordinates": {
+        "x": -1,
+        "y": -1,
+        "z": 0
+      },
+      "Up": "d586bb18-0290-49e7-a17d-a384df5ec1ad",
+      "Down": "",
+      "Left": "",
+      "Right": ""
+    },
+    "9c162a8e-d028-431c-872e-c4e9ad7b515f": {
+      "id": "9c162a8e-d028-431c-872e-c4e9ad7b515f",
+      "isFirstRoom": true,
+      "entrance": "Down",
+      "dimensions": {
+        "width": 0,
+        "height": 0
+      },
+      "coordinates": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "Up": "cf2fd796-a5d1-4aea-adcc-7a80ae7d4fe6",
+      "Down": "",
+      "Left": "d586bb18-0290-49e7-a17d-a384df5ec1ad",
+      "Right": ""
+    },
+    "c175b600-4588-4549-9dac-b38c068de201": {
+      "id": "c175b600-4588-4549-9dac-b38c068de201",
+      "isFirstRoom": false,
+      "entrance": "",
+      "dimensions": {
+        "width": 0,
+        "height": 0
+      },
+      "coordinates": {
+        "x": -2,
+        "y": 0,
+        "z": 0
+      },
+      "Up": "",
+      "Down": "",
+      "Left": "",
+      "Right": "d586bb18-0290-49e7-a17d-a384df5ec1ad"
+    },
+    "cf2fd796-a5d1-4aea-adcc-7a80ae7d4fe6": {
+      "id": "cf2fd796-a5d1-4aea-adcc-7a80ae7d4fe6",
+      "isFirstRoom": false,
+      "entrance": "",
+      "dimensions": {
+        "width": 0,
+        "height": 0
+      },
+      "coordinates": {
+        "x": 0,
+        "y": 1,
+        "z": 0
+      },
+      "Up": "63665fff-6074-498b-ae80-e2ac7a149963",
+      "Down": "9c162a8e-d028-431c-872e-c4e9ad7b515f",
+      "Left": "",
+      "Right": ""
+    },
+    "d586bb18-0290-49e7-a17d-a384df5ec1ad": {
+      "id": "d586bb18-0290-49e7-a17d-a384df5ec1ad",
+      "isFirstRoom": false,
+      "entrance": "",
+      "dimensions": {
+        "width": 0,
+        "height": 0
+      },
+      "coordinates": {
+        "x": -1,
+        "y": 0,
+        "z": 0
+      },
+      "Up": "7e76026f-84ae-4354-82d7-6376a593c21e",
+      "Down": "803627d8-372f-4103-a1ae-161d2b1d099a",
+      "Left": "c175b600-4588-4549-9dac-b38c068de201",
+      "Right": "9c162a8e-d028-431c-872e-c4e9ad7b515f"
+    }
+  }
+}
