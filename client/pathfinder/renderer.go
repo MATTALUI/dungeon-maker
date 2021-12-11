@@ -15,6 +15,9 @@ var (
   MAX_ROOMS = float64(9.0)
   WINDOW_DIM = float64((ROOM_BLOCK_SIZE + PADDING) * MAX_ROOMS * 2.0)
   WINDOW_MID = WINDOW_DIM / float64(2.0)
+  HALF_PAD = PADDING / float64(2.0)
+  CONNECTION_WIDTH = float64(6.0)
+  HALF_CONNECTION_WIDTH = CONNECTION_WIDTH / float64(2.0)
 )
 
 func GetBottomLeft(room *game.Room) pixel.Vec {
@@ -38,6 +41,28 @@ func DrawRoom(room *game.Room, target pixel.Target) {
   if room.IsFirstRoom {
     color = colornames.Red
   }
+
+  if room.HasUpDoor() { // TOP
+    blx := topRight.X - ROOM_BLOCK_MID - HALF_CONNECTION_WIDTH
+    bly := topRight.Y
+
+    trx := blx + CONNECTION_WIDTH
+    try := bly + PADDING
+
+    game.DrawRect(target, colornames.Black, pixel.V(blx, bly), pixel.V(trx, try))
+  }
+
+  // if room.HasRightDoor() { // RIGHT
+  //   game.DrawRect(target, colornames.Black, pixel.V(0,0), pixel.V(100, 100))
+  // }
+
+  // if room.HasDownDoor() { // BOTTOM
+  //   game.DrawRect(target, colornames.Black, pixel.V(0,0), pixel.V(100, 100))
+  // }
+
+  // if room.HasLeftDoor() { // LEFT
+  //   game.DrawRect(target, colornames.Black, pixel.V(0,0), pixel.V(100, 100))
+  // }
 
   game.DrawRect(target, color, bottomLeft, topRight)
 }
