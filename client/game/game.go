@@ -1,4 +1,4 @@
-package main
+package game
 
 import (
   "fmt"
@@ -30,7 +30,7 @@ func NewGame() Game {
 
   game.dungeon = GenerateDungeon()
   game.CurrentRoom = game.dungeon.StartingRoom
-  game.dungeon.display()
+  game.dungeon.Display()
   fmt.Println(game.dungeon.ToJson())
   game.hero = NewHero()
   game.hero.location = entranceStarts[game.dungeon.StartingRoom.Entrance]

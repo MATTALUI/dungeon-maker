@@ -1,4 +1,4 @@
-package main
+package game
 
 type Dimension struct {
   Width int `json:"width"`;

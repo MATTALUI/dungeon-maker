@@ -4,6 +4,7 @@ import (
   "fmt"
 	"github.com/faiface/pixel/pixelgl"
   "dungeon-maker/pathfinder"
+  "dungeon-maker/game"
 )
 
 func init() {
@@ -13,7 +14,7 @@ func init() {
 // This actually runs the game
 func main() {
   fmt.Println("Generating your dungeon!")
-  game := NewGame()
+  game := game.NewGame()
   pixelgl.Run(game.Run)
 }
 

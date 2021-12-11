@@ -1,4 +1,4 @@
-package main
+package game
 
 import (
   "fmt"
@@ -84,7 +84,7 @@ func (dungeon *Dungeon) generateRoom() {
   // dungeon.Rooms = append(dungeon.Rooms, &newRoom)
 }
 
-func (dungeon *Dungeon) display() {
+func (dungeon *Dungeon) Display() {
   // fmt.Println(dungeon)
   // for _, room := range dungeon.Rooms {
   //   room.DisplayRoomExplanation()
