@@ -2,6 +2,7 @@ package pathfinder
 
 import (
   "fmt"
+  "math/rand"
   "dungeon-maker/game"
   "github.com/faiface/pixel"
   "github.com/faiface/pixel/pixelgl"
@@ -13,10 +14,10 @@ var (
   ROOM_BLOCK_MID = float64(ROOM_BLOCK_SIZE / 2.0)
   PADDING = float64(10.0)
   MAX_ROOMS = float64(9.0)
-  WINDOW_DIM = float64((ROOM_BLOCK_SIZE + PADDING) * MAX_ROOMS * 1.2)
+  CONNECTION_WIDTH = float64(6.0)
+  WINDOW_DIM = float64((ROOM_BLOCK_SIZE + PADDING) * MAX_ROOMS * 1.5)
   WINDOW_MID = WINDOW_DIM / float64(2.0)
   HALF_PAD = PADDING / float64(2.0)
-  CONNECTION_WIDTH = float64(6.0)
   HALF_CONNECTION_WIDTH = CONNECTION_WIDTH / float64(2.0)
 )
 
@@ -34,7 +35,7 @@ func GetTopRight(room *game.Room) pixel.Vec {
   return pixel.V(x + ROOM_BLOCK_MID, y + ROOM_BLOCK_MID)
 }
 
-func DrawRoom(room *game.Room, target pixel.Target) {
+func DrawRoom(room *game.Room, isTarget bool, target pixel.Target) {
   bottomLeft := GetBottomLeft(room)
   topRight := GetTopRight(room)
 
@@ -87,6 +88,8 @@ func DrawRoom(room *game.Room, target pixel.Target) {
   color := colornames.Darkslategray
   if room.IsFirstRoom {
     color = colornames.Red
+  } else if isTarget {
+    color = colornames.Yellow
   }
 
   game.DrawRect(target, color, bottomLeft, topRight)
@@ -95,13 +98,18 @@ func DrawRoom(room *game.Room, target pixel.Target) {
 func StartRendering() {
   fmt.Println("Starting Pathfinder Rendering")
   dungeon := game.GenerateFlatDungeon()
-  dungeon.Display()
+  // dungeon.Display()
 
   cfg := pixelgl.WindowConfig{
 		Title:  "PATHFINDER",
 		Bounds: pixel.R(0, 0, float64(WINDOW_DIM), float64(WINDOW_DIM)),
     VSync: true,
 	}
+
+  targetIndex := rand.Intn(len(dungeon.Rooms))
+  targetRoom := dungeon.Rooms[targetIndex]
+  fmt.Println("target room: " + targetRoom.Id)
+  fmt.Println(BuildAdjacencyHash(dungeon.Rooms))
 
   win, err := pixelgl.NewWindow(cfg)
 	if err != nil {
@@ -112,7 +120,8 @@ func StartRendering() {
     win.Clear(colornames.Darkgrey)
 
     for _, room := range dungeon.Rooms {
-      DrawRoom(room, win)
+      isTarget := room.Id == targetRoom.Id
+      DrawRoom(room, isTarget, win)
     }
 
 		win.Update()
