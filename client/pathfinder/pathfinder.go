@@ -1,6 +1,7 @@
 package pathfinder
 
 import (
+  "fmt"
   "dungeon-maker/game"
 )
 
@@ -28,4 +29,17 @@ func BuildAdjacencyHash(rooms []*game.Room) map[*game.Room][]*game.Room {
   }
 
   return adjacencyHash
+}
+
+func DisplayDirectionsForPath(path []*game.Room) {
+  // NOTE: Sine Dijkstras is the oly pathfinder we have so far, we do this
+  // backwards. Eventually, we should make sure everything is contant
+  fmt.Println(path)
+  fmt.Println("You are in the starting room.")
+  for i := len(path) - 1; i > 0; i-- {
+    from := path[i]
+    // to := path[i - 1]
+    fmt.Println("Move from room ", from)
+  }
+  fmt.Println("You are in the target room.")
 }
