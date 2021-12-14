@@ -6,6 +6,8 @@ import (
 	"github.com/faiface/pixel/pixelgl"
   "golang.org/x/image/colornames"
   "time"
+  "net"
+  // "bufio"
 )
 
 const (
@@ -31,14 +33,13 @@ func NewGame() Game {
   game.dungeon = GenerateDungeon()
   game.CurrentRoom = game.dungeon.StartingRoom
   game.dungeon.Display()
-  fmt.Println(game.dungeon.ToJson())
   game.hero = NewHero()
   game.hero.location = entranceStarts[game.dungeon.StartingRoom.Entrance]
   game.hero.sprite.StartAnimation(opposites[game.dungeon.StartingRoom.Entrance])
   game.hero.sprite.StopAnimation()
   game.mode = MODE_EXPLORATION
 
-  return  game
+  return game
 }
 
 type Game struct {
@@ -47,10 +48,13 @@ type Game struct {
   hero Hero;
   mode string;
   CurrentRoom *Room;
+  Conn net.Conn
 }
 
 func (game *Game) Run() {
   fmt.Println("Running Game.")
+  game.InitConnection()
+  // return
   game.InitWindow()
 
   var (
@@ -75,6 +79,20 @@ func (game *Game) Run() {
     game.Draw()
 		game.win.Update()
 	}
+}
+
+func (game *Game) InitConnection() {
+  fmt.Println("Making Connection To Server")
+  conn, err := net.Dial("tcp", "0.0.0.0:3000")
+  if err != nil {
+    fmt.Println("Unable to make Server Connection")
+  	panic(err)
+  }
+  game.Conn = conn
+  // NOTE: Defer closing this?
+
+  game.Conn.Write([]byte("{\"event\": \"connect\"}\n"))
+  go AwaitMessages(game)
 }
 
 func (game *Game) InitWindow() {

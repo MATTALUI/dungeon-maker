@@ -7,19 +7,15 @@ import (
   "dungeon-maker/game"
 )
 
-func init() {
-  fmt.Println("init main")
-}
-
 // This actually runs the game
-func _main() {
+func main() {
   fmt.Println("Generating your dungeon!")
   game := game.NewGame()
   pixelgl.Run(game.Run)
 }
 
 // This one is for pathfinding experimentation
-func main() {
+func _main() {
   fmt.Println("Game is running in experimentation Mode.")
   pixelgl.Run(pathfinder.StartRendering)
 }

@@ -2,7 +2,7 @@ package pathfinder
 
 import (
   "fmt"
-  // "math/rand"
+  "math/rand"
   "dungeon-maker/game"
   "github.com/faiface/pixel"
   "github.com/faiface/pixel/pixelgl"
@@ -130,9 +130,10 @@ func StartRendering() {
     VSync: true,
 	}
 
-  // targetIndex := rand.Intn(len(dungeon.Rooms))
-  // targetRoom := dungeon.Rooms[targetIndex]
-  targetRoom := dungeon.Rooms[len(dungeon.Rooms) - 1]
+  targetIndex := rand.Intn(len(dungeon.Rooms))
+  fmt.Println(targetIndex, " / ", len(dungeon.Rooms))
+  targetRoom := dungeon.Rooms[targetIndex]
+  // targetRoom := dungeon.Rooms[len(dungeon.Rooms) - 1]
   fmt.Println("target room: " + targetRoom.Id)
   path := FindPathDijkstra(dungeon.Rooms, dungeon.StartingRoom, targetRoom)
 
@@ -148,9 +149,13 @@ func StartRendering() {
     for _, room := range dungeon.Rooms {
       isTarget := room.Id == targetRoom.Id
       DrawRoom(room, isTarget, win)
-      DrawPath(path, win)
     }
+    DrawPath(path, win)
 
 		win.Update()
 	}
+}
+
+func RenderMap(game game.Game) {
+
 }
