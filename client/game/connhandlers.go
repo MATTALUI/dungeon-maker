@@ -2,6 +2,7 @@ package game
 
 import (
   "fmt"
+  "net"
   "encoding/json"
   "bufio"
 )
@@ -36,6 +37,16 @@ func AwaitMessages(game *Game) {
 
 	go HandleRawMessage(game, rawMessage)
 	AwaitMessages(game)
+}
+
+func SendMessage(conn net.Conn, message string) {
+  conn.Write([]byte(message + "\n"))
+}
+
+func SendSocketMessage(conn net.Conn, message SocketMessage) {
+  json, _ := json.Marshal(message)
+  str := string(json) + "\n"
+  conn.Write([]byte(str))
 }
 
 func HandleRawMessage(game *Game, rawMessage string) {

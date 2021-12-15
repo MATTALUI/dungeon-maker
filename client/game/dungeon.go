@@ -6,6 +6,7 @@ import (
   "time"
   "strconv"
   "encoding/json"
+  "io/ioutil"
 )
 
 const (
@@ -48,6 +49,52 @@ func GenerateFlatDungeon() Dungeon {
       if room.Coords.Z > 0 {
         validDungeon = false
       }
+    }
+  }
+
+  return dungeon
+}
+
+func ParseDungeonFromJSON(dungeonData string) Dungeon {
+  dungeon := Dungeon{}
+  dungeon.RoomRegister = make(map[string]*Room)
+  dungeon.Rooms = make([]*Room, 0)
+  repr := DungeonRepr{}
+
+  dat, _ := ioutil.ReadFile("/Users/matthummer/Development/hummer/golang/dungeon-maker/server/example.json")
+  json.Unmarshal(dat, &repr)
+
+  for _, roomRepr := range repr.RoomIndex {
+    room := NewRoomFromRepr(roomRepr)
+    dungeon.RoomRegister[room.Coords.ToString()] = &room
+    if room.IsFirstRoom {
+      dungeon.StartingRoom = &room
+    }
+    dungeon.Rooms = append(dungeon.Rooms, &room)
+  }
+
+  for _, room := range dungeon.Rooms {
+    equivilantRepr := repr.RoomIndex[room.Id]
+
+    if len(equivilantRepr.Left) > 0 {
+      reprLeft := repr.RoomIndex[equivilantRepr.Left]
+      connectingRoom := dungeon.RoomRegister[reprLeft.Coords.ToString()]
+      room.Left = connectingRoom
+    }
+    if len(equivilantRepr.Right) > 0 {
+      reprRight := repr.RoomIndex[equivilantRepr.Right]
+      connectingRoom := dungeon.RoomRegister[reprRight.Coords.ToString()]
+      room.Right = connectingRoom
+    }
+    if len(equivilantRepr.Up) > 0 {
+      reprUp := repr.RoomIndex[equivilantRepr.Up]
+      connectingRoom := dungeon.RoomRegister[reprUp.Coords.ToString()]
+      room.Up = connectingRoom
+    }
+    if len(equivilantRepr.Down) > 0 {
+      reprDown := repr.RoomIndex[equivilantRepr.Down]
+      connectingRoom := dungeon.RoomRegister[reprDown.Coords.ToString()]
+      room.Down = connectingRoom
     }
   }
 

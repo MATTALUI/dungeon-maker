@@ -30,9 +30,10 @@ const (
 func NewGame() Game {
   game := Game{}
 
-  game.dungeon = GenerateDungeon()
-  game.CurrentRoom = game.dungeon.StartingRoom
+  // game.dungeon = GenerateDungeon()
+  game.dungeon = ParseDungeonFromJSON("")
   game.dungeon.Display()
+  game.CurrentRoom = game.dungeon.StartingRoom
   game.hero = NewHero()
   game.hero.location = entranceStarts[game.dungeon.StartingRoom.Entrance]
   game.hero.sprite.StartAnimation(opposites[game.dungeon.StartingRoom.Entrance])
@@ -83,7 +84,7 @@ func (game *Game) Run() {
 
 func (game *Game) InitConnection() {
   fmt.Println("Making Connection To Server")
-  conn, err := net.Dial("tcp", "0.0.0.0:3000")
+  conn, err := net.Dial("tcp", "localhost:3000")
   if err != nil {
     fmt.Println("Unable to make Server Connection")
   	panic(err)

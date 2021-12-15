@@ -70,6 +70,25 @@ func NewRoom() Room {
   return room
 }
 
+func NewRoomFromRepr(repr RoomRepr) Room {
+  // NOTE: This function only build the Room data, but it doesn't attach other rooms.
+  room := Room{}
+
+  room.Id = repr.Id
+
+  room.IsFirstRoom = repr.IsFirstRoom
+  room.Entrance = repr.Entrance
+
+  room.Dimensions.Width = repr.Dimensions.Width
+  room.Dimensions.Height = repr.Dimensions.Height
+
+  room.Coords.X = repr.Coords.X
+  room.Coords.Y = repr.Coords.Y
+  room.Coords.Z = repr.Coords.Z
+
+  return room
+}
+
 type Room struct {
   Id string;
 
