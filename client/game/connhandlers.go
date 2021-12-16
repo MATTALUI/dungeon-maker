@@ -19,6 +19,7 @@ type SocketMessage struct {
 func init() {
   handlers = make(map[string]func(*Game, SocketMessage))
   on("connect", HandleConnect)
+  on("player-join", HandlePlayerJoin)
 }
 
 func on(event string, handler func(*Game, SocketMessage)) {
@@ -88,4 +89,15 @@ func HandleDisconnect(game *Game) {
 
 func HandleConnect(game *Game, message SocketMessage) {
   fmt.Println("You've received a connection message")
+}
+
+func HandlePlayerJoin(game *Game, message SocketMessage) {
+  var connectedPlayers []ConnectedPlayer
+  json.Unmarshal([]byte(message.JSONData), &connectedPlayers)
+  for _, player := range connectedPlayers {
+    // You should not consider yourself a connected player
+    if player.Id != game.hero.Id {
+      game.ConnectedPlayers = append(game.ConnectedPlayers, player)
+    }
+  }
 }

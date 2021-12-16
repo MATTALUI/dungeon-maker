@@ -7,7 +7,7 @@ import (
   "golang.org/x/image/colornames"
   "time"
   "net"
-  "encoding/json"
+  // "encoding/json"
 )
 
 const (
@@ -112,16 +112,7 @@ func (game *Game) LoadFromConnection() {
     JSONData: player.ToJson(),
   })
   playerMessage := ReadSocketMessage(game.Conn)
-  var connectedPlayers []ConnectedPlayer
-  json.Unmarshal([]byte(playerMessage.JSONData), &connectedPlayers)
-  for _, player := range connectedPlayers {
-    // You should not consider yourself a connected player
-    if player.Id != game.hero.Id {
-      game.ConnectedPlayers = append(game.ConnectedPlayers, player)
-    }
-  }
-  fmt.Println(connectedPlayers)
-  fmt.Println("game connected players: ", game.ConnectedPlayers)
+  HandlePlayerJoin(game, playerMessage)
 }
 
 func (game *Game) InitWindow() {

@@ -11,7 +11,6 @@ import (
 func main() {
   fmt.Println("Generating your dungeon!")
   game := game.NewGame()
-  return
   pixelgl.Run(game.Run)
 }
 
