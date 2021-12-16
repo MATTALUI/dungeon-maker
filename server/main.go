@@ -4,25 +4,29 @@ import (
 	"fmt"
 	"net"
   "bufio"
+	"dungeon-maker-server/game"
 )
 
 var (
 	connections []net.Conn
+	dungeon game.Dungeon
 )
 
 func init() {
 	connections = make([]net.Conn, 0)
+	dungeon = game.GenerateDungeon()
+	dungeon.Display()
 }
 
 func main() {
 	fmt.Println("Starting Dungeon Server")
-	l, err := net.Listen("tcp", "0.0.0.0:3000")
+	l, err := net.Listen("tcp", "0.0.0.0:6969")
 	if err != nil {
 		fmt.Println("Error listening:", err.Error())
 		panic(err)
 	}
 	defer l.Close()
-	fmt.Println("Listening on 0.0.0.0:3000")
+	fmt.Println("Listening on 0.0.0.0:6969")
 
 	for {
 		c, err := l.Accept()

@@ -43,6 +43,13 @@ func SendMessage(conn net.Conn, message string) {
   conn.Write([]byte(message + "\n"))
 }
 
+func ReadData(conn net.Conn) string {
+  buffer, _ := bufio.NewReader(conn).ReadBytes('\n')
+  data := string(buffer[:len(buffer)-1])
+
+  return data
+}
+
 func SendSocketMessage(conn net.Conn, message SocketMessage) {
   json, _ := json.Marshal(message)
   str := string(json) + "\n"
@@ -50,10 +57,8 @@ func SendSocketMessage(conn net.Conn, message SocketMessage) {
 }
 
 func HandleRawMessage(game *Game, rawMessage string) {
-  fmt.Println(rawMessage)
   message := SocketMessage{}
   json.Unmarshal([]byte(rawMessage), &message)
-  fmt.Println(message)
   HandleMessage(game, message)
 }
 
@@ -62,7 +67,7 @@ func HandleMessage(game *Game, message SocketMessage) {
   if exists {
     handler(game, message)
   } else {
-    fmt.Println("Server sent unknown Message: ", game.Conn, message)
+    // fmt.Println("Server sent unknown Message: ", game.Conn, message)
   }
 }
 

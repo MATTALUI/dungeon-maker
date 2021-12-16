@@ -6,7 +6,7 @@ import (
   "time"
   "strconv"
   "encoding/json"
-  "io/ioutil"
+  // "io/ioutil"
 )
 
 const (
@@ -61,8 +61,8 @@ func ParseDungeonFromJSON(dungeonData string) Dungeon {
   dungeon.Rooms = make([]*Room, 0)
   repr := DungeonRepr{}
 
-  dat, _ := ioutil.ReadFile("/Users/matthummer/Development/hummer/golang/dungeon-maker/server/example.json")
-  json.Unmarshal(dat, &repr)
+  // dat, _ := ioutil.ReadFile("")
+  json.Unmarshal([]byte(dungeonData), &repr)
 
   for _, roomRepr := range repr.RoomIndex {
     room := NewRoomFromRepr(roomRepr)
@@ -177,7 +177,7 @@ func (dungeon *Dungeon) Display() {
     fmt.Print("\n")
   }
   // fmt.Println("\n\n\n")
-  fmt.Println(dungeon.RoomRegister)
+  // fmt.Println(dungeon.RoomRegister)
 }
 
 func (dungeon *Dungeon) ToRepr() DungeonRepr {

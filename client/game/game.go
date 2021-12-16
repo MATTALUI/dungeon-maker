@@ -30,8 +30,16 @@ const (
 func NewGame() Game {
   game := Game{}
 
-  // game.dungeon = GenerateDungeon()
-  game.dungeon = ParseDungeonFromJSON("")
+  game.InitConnection()
+  if game.Conn != nil {
+    SendMessage(game.Conn, "{\"event\": \"get-dungeon\"}\n")
+    dungeonJSON := ReadData(game.Conn)
+    game.dungeon = ParseDungeonFromJSON(dungeonJSON)
+    go AwaitMessages(&game)
+  } else {
+    game.dungeon = GenerateDungeon()
+  }
+
   game.dungeon.Display()
   game.CurrentRoom = game.dungeon.StartingRoom
   game.hero = NewHero()
@@ -54,8 +62,6 @@ type Game struct {
 
 func (game *Game) Run() {
   fmt.Println("Running Game.")
-  game.InitConnection()
-  // return
   game.InitWindow()
 
   var (
@@ -84,16 +90,13 @@ func (game *Game) Run() {
 
 func (game *Game) InitConnection() {
   fmt.Println("Making Connection To Server")
-  conn, err := net.Dial("tcp", "localhost:3000")
+  conn, err := net.Dial("tcp", "localhost:6969")
   if err != nil {
-    fmt.Println("Unable to make Server Connection")
-  	panic(err)
+    game.Conn = nil
+    fmt.Println("Unable to make Server Connection--playing locally only")
+  } else {
+    game.Conn = conn
   }
-  game.Conn = conn
-  // NOTE: Defer closing this?
-
-  game.Conn.Write([]byte("{\"event\": \"connect\"}\n"))
-  go AwaitMessages(game)
 }
 
 func (game *Game) InitWindow() {

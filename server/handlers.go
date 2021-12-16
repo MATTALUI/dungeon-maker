@@ -19,6 +19,7 @@ type SocketMessage struct {
 func init() {
   handlers = make(map[string]func(net.Conn, SocketMessage))
   on("connect", HandleConnect)
+  on("get-dungeon", HandleGetDungeon)
 }
 
 func on(event string, handler func(net.Conn, SocketMessage)) {
@@ -37,6 +38,7 @@ func HandleDisconnect(conn net.Conn) {
 }
 
 func HandleRawMessage(conn net.Conn, rawMessage string) {
+  fmt.Println("raw message: ", rawMessage)
   message := SocketMessage{}
   json.Unmarshal([]byte(rawMessage), &message)
   HandleMessage(conn, message)
@@ -45,7 +47,7 @@ func HandleRawMessage(conn net.Conn, rawMessage string) {
 func HandleMessage(conn net.Conn, message SocketMessage) {
   handler, exists := handlers[message.Event]
   if exists {
-    handler(conn, message)
+    go handler(conn, message)
   } else {
     fmt.Println("Client sent unknown Message: ", conn, message)
   }
@@ -57,4 +59,10 @@ func HandleConnect(conn net.Conn, message SocketMessage) {
 
   fmt.Println("Im about to send off the message")
   SendMessage(conn, "{\"event\": \"connect\",\"data\": \"You have made the connection. Welcome!\"}")
+}
+
+func HandleGetDungeon(conn net.Conn, message SocketMessage) {
+  fmt.Println("Sending the dungeon data!")
+  json := dungeon.ToJson()
+  SendMessage(conn, json)
 }

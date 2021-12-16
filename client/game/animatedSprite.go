@@ -1,7 +1,6 @@
 package game
 
 import (
-  // "fmt"
   "github.com/faiface/pixel"
   "time"
 )
