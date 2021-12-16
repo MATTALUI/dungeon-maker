@@ -5,6 +5,7 @@ import (
   "net"
   "encoding/json"
   "time"
+  "dungeon-maker-server/game"
 )
 
 var (
@@ -20,6 +21,7 @@ func init() {
   handlers = make(map[string]func(net.Conn, SocketMessage))
   on("connect", HandleConnect)
   on("get-dungeon", HandleGetDungeon)
+  on("player-join", HandlePlayerJoin)
 }
 
 func on(event string, handler func(net.Conn, SocketMessage)) {
@@ -27,18 +29,18 @@ func on(event string, handler func(net.Conn, SocketMessage)) {
 }
 
 func HandleDisconnect(conn net.Conn) {
-	remaining := make([]net.Conn, 0)
-	for _, connection := range connections {
-		if connection != conn {
-			remaining = append(remaining, connection)
+	remaining := make([]game.ConnectedPlayer, 0)
+	for _, player := range players {
+		if player.Conn != conn {
+			remaining = append(remaining, player)
 		}
 	}
 
-	connections = remaining
+	players = remaining
 }
 
 func HandleRawMessage(conn net.Conn, rawMessage string) {
-  fmt.Println("raw message: ", rawMessage)
+  // fmt.Println("raw message: ", rawMessage)
   message := SocketMessage{}
   json.Unmarshal([]byte(rawMessage), &message)
   HandleMessage(conn, message)
@@ -62,7 +64,20 @@ func HandleConnect(conn net.Conn, message SocketMessage) {
 }
 
 func HandleGetDungeon(conn net.Conn, message SocketMessage) {
-  fmt.Println("Sending the dungeon data!")
   json := dungeon.ToJson()
   SendMessage(conn, json)
+}
+
+func HandlePlayerJoin(conn net.Conn, message SocketMessage) {
+  fmt.Println("A new player joined!")
+  player := game.ConnectedPlayer{}
+  json.Unmarshal([]byte(message.JSONData), & player)
+  player.Conn = conn
+  players = append(players, player)
+  response, _ := json.Marshal(players)
+
+  BroadcastSocketMessage(game.SocketMessage{
+    Event: "player-join",
+    JSONData: string(response),
+  })
 }

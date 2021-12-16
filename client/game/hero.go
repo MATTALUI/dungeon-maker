@@ -2,6 +2,7 @@ package game
 
 import (
   "github.com/faiface/pixel"
+  "github.com/google/uuid"
 )
 
 const (
@@ -10,6 +11,8 @@ const (
 
 func NewHero() Hero {
   hero := Hero{}
+
+  hero.Id = uuid.NewString()
 
   hero.location.X = WINDOW_WIDTH / 2
   hero.location.Y = WINDOW_HEIGHT / 2
@@ -26,8 +29,9 @@ func NewHero() Hero {
 }
 
 type Hero struct {
+  Id string;
   location pixel.Vec;
-  sprite AnimatedSprite
+  sprite AnimatedSprite;
 }
 
 func (hero *Hero) Draw(target pixel.Target) {

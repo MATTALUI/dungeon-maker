@@ -8,12 +8,14 @@ import (
 )
 
 var (
-	connections []net.Conn
+	// connections []net.Conn
 	dungeon game.Dungeon
+	players []game.ConnectedPlayer
 )
 
 func init() {
-	connections = make([]net.Conn, 0)
+	// connections = make([]net.Conn, 0)
+	players = make([]game.ConnectedPlayer, 0)
 	dungeon = game.GenerateDungeon()
 	dungeon.Display()
 }
@@ -37,7 +39,7 @@ func main() {
 		fmt.Println("Client connected.")
 
 		fmt.Println("Client " + c.RemoteAddr().String() + " connected.")
-    connections = append(connections, c)
+    // connections = append(connections, c)
 		go AwaitMessages(c)
 	}
 }

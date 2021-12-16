@@ -7,7 +7,7 @@ import (
   "golang.org/x/image/colornames"
   "time"
   "net"
-  // "bufio"
+  "encoding/json"
 )
 
 const (
@@ -29,12 +29,12 @@ const (
 
 func NewGame() Game {
   game := Game{}
+  game.ConnectedPlayers = make([]ConnectedPlayer, 0)
 
   game.InitConnection()
+  game.hero = NewHero()
   if game.Conn != nil {
-    SendMessage(game.Conn, "{\"event\": \"get-dungeon\"}\n")
-    dungeonJSON := ReadData(game.Conn)
-    game.dungeon = ParseDungeonFromJSON(dungeonJSON)
+    game.LoadFromConnection()
     go AwaitMessages(&game)
   } else {
     game.dungeon = GenerateDungeon()
@@ -42,7 +42,6 @@ func NewGame() Game {
 
   game.dungeon.Display()
   game.CurrentRoom = game.dungeon.StartingRoom
-  game.hero = NewHero()
   game.hero.location = entranceStarts[game.dungeon.StartingRoom.Entrance]
   game.hero.sprite.StartAnimation(opposites[game.dungeon.StartingRoom.Entrance])
   game.hero.sprite.StopAnimation()
@@ -57,7 +56,8 @@ type Game struct {
   hero Hero;
   mode string;
   CurrentRoom *Room;
-  Conn net.Conn
+  Conn net.Conn;
+  ConnectedPlayers []ConnectedPlayer;
 }
 
 func (game *Game) Run() {
@@ -97,6 +97,31 @@ func (game *Game) InitConnection() {
   } else {
     game.Conn = conn
   }
+}
+
+func (game *Game) LoadFromConnection() {
+  // Load the remote dungeon from the server
+  SendMessage(game.Conn, "{\"event\": \"get-dungeon\"}\n")
+  dungeonJSON := ReadData(game.Conn)
+  game.dungeon = ParseDungeonFromJSON(dungeonJSON)
+
+  // Load Other Players
+  player := NewConnectedPlayerFromHero(&game.hero)
+  SendSocketMessage(game.Conn, SocketMessage{
+    Event: "player-join",
+    JSONData: player.ToJson(),
+  })
+  playerMessage := ReadSocketMessage(game.Conn)
+  var connectedPlayers []ConnectedPlayer
+  json.Unmarshal([]byte(playerMessage.JSONData), &connectedPlayers)
+  for _, player := range connectedPlayers {
+    // You should not consider yourself a connected player
+    if player.Id != game.hero.Id {
+      game.ConnectedPlayers = append(game.ConnectedPlayers, player)
+    }
+  }
+  fmt.Println(connectedPlayers)
+  fmt.Println("game connected players: ", game.ConnectedPlayers)
 }
 
 func (game *Game) InitWindow() {

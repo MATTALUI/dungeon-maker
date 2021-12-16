@@ -50,6 +50,15 @@ func ReadData(conn net.Conn) string {
   return data
 }
 
+func ReadSocketMessage(conn net.Conn) SocketMessage {
+  buffer, _ := bufio.NewReader(conn).ReadBytes('\n')
+  data := buffer[:len(buffer)-1]
+  message := SocketMessage{}
+  json.Unmarshal(data, &message)
+
+  return message
+}
+
 func SendSocketMessage(conn net.Conn, message SocketMessage) {
   json, _ := json.Marshal(message)
   str := string(json) + "\n"

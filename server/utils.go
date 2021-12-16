@@ -8,6 +8,6 @@ func sendOutPoll() {
 	for {
 		time.Sleep(5 * time.Second)
 
-		Emit("Are you still there?")
+		Broadcast("Are you still there?")
 	}
 }
