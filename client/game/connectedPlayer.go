@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"encoding/json"
 	"net"
+	"golang.org/x/image/colornames"
 )
 
 type ConnectedPlayer struct {
@@ -42,4 +43,14 @@ func (player ConnectedPlayer) ToJson() string {
 	jsonStr, _ := json.Marshal(player)
 
 	return string(jsonStr)
+}
+
+func (player ConnectedPlayer) Draw(target pixel.Target) {
+	blx := player.Location.X - TILE_HALF
+	bly := player.Location.Y - TILE_HALF
+
+	trx := player.Location.X + TILE_HALF
+	try := player.Location.Y + TILE_HALF
+
+	DrawRect(target , colornames.Black, pixel.V(blx, bly), pixel.V(trx, try))
 }

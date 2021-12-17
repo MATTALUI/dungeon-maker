@@ -22,6 +22,7 @@ func init() {
   on("connect", HandleConnect)
   on("get-dungeon", HandleGetDungeon)
   on("player-join", HandlePlayerJoin)
+  on("player-move", HandlePlayerMove)
 }
 
 func on(event string, handler func(net.Conn, SocketMessage)) {
@@ -69,15 +70,33 @@ func HandleGetDungeon(conn net.Conn, message SocketMessage) {
 }
 
 func HandlePlayerJoin(conn net.Conn, message SocketMessage) {
-  fmt.Println("A new player joined!")
   player := game.ConnectedPlayer{}
-  json.Unmarshal([]byte(message.JSONData), & player)
+  json.Unmarshal([]byte(message.JSONData), &player)
   player.Conn = conn
   players = append(players, player)
   response, _ := json.Marshal(players)
 
-  BroadcastSocketMessage(game.SocketMessage{
+  BroadcastSocketMessage(SocketMessage{
     Event: "player-join",
     JSONData: string(response),
   })
+}
+
+func HandlePlayerMove(conn net.Conn, message SocketMessage) {
+  playerUpdate := game.ConnectedPlayer{}
+  json.Unmarshal([]byte(message.JSONData), &playerUpdate)
+
+  for i := 0; i < len(players); i++ {
+    player := &players[i]
+    if player.Id == playerUpdate.Id {
+      player.Location.X = playerUpdate.Location.X
+      player.Location.Y = playerUpdate.Location.Y
+      player.CurrentRoomId = playerUpdate.CurrentRoomId
+      player.Orientation = playerUpdate.Orientation
+
+      break
+    }
+  }
+
+  EmitSocketMessage(conn, message)
 }

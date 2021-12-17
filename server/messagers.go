@@ -2,7 +2,7 @@ package main
 
 import (
   "net"
-  "dungeon-maker-server/game"
+  // "dungeon-maker-server/game"
   "encoding/json"
 )
 
@@ -12,10 +12,19 @@ func Broadcast(message string) {
   }
 }
 
-func BroadcastSocketMessage(message game.SocketMessage) {
+func BroadcastSocketMessage(message SocketMessage) {
   jsonData, _ := json.Marshal(message)
   for _, player := range players {
     player.Conn.Write([]byte(string(jsonData) + "\n"))
+  }
+}
+
+func EmitSocketMessage(conn net.Conn, message SocketMessage) {
+  jsonData, _ := json.Marshal(message)
+  for _, player := range players {
+    if player.Conn != conn {
+      player.Conn.Write([]byte(string(jsonData) + "\n"))
+    }
   }
 }
 

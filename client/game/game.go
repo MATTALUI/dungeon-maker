@@ -7,7 +7,7 @@ import (
   "golang.org/x/image/colornames"
   "time"
   "net"
-  // "encoding/json"
+  "encoding/json"
 )
 
 const (
@@ -138,6 +138,11 @@ func (game *Game) Update() {
 
 func (game *Game) Draw() {
   game.CurrentRoom.Draw(game.win)
+  for _, player := range game.ConnectedPlayers {
+    if player.CurrentRoomId == game.CurrentRoom.Id {
+      player.Draw(game.win)
+    }
+  }
   game.hero.Draw(game.win)
 }
 
@@ -150,6 +155,7 @@ func (game *Game) HandleInputs() {
 }
 
 func (game *Game) HandleExplorationInputs() {
+  heroMoved := false
   // PRESS ONLY CONTROLS
   if game.win.JustPressed(pixelgl.KeyLeft) || game.win.JustPressed(pixelgl.KeyA) {
     game.hero.sprite.StartAnimation(LEFT)
@@ -169,24 +175,28 @@ func (game *Game) HandleExplorationInputs() {
     targetLocation := pixel.V(game.hero.location.X - HERO_SPEED, game.hero.location.Y)
     if game.CheckHeroMovement(targetLocation) {
       game.hero.Left()
+      heroMoved = true
     }
   }
   if game.win.Pressed(pixelgl.KeyRight) || game.win.Pressed(pixelgl.KeyD) {
     targetLocation := pixel.V(game.hero.location.X + HERO_SPEED, game.hero.location.Y)
     if game.CheckHeroMovement(targetLocation) {
       game.hero.Right()
+      heroMoved = true
     }
   }
   if game.win.Pressed(pixelgl.KeyDown) || game.win.Pressed(pixelgl.KeyS) {
     targetLocation := pixel.V(game.hero.location.X, game.hero.location.Y - HERO_SPEED)
     if game.CheckHeroMovement(targetLocation) {
       game.hero.Down()
+      heroMoved = true
     }
   }
   if game.win.Pressed(pixelgl.KeyUp) || game.win.Pressed(pixelgl.KeyW) {
     targetLocation := pixel.V(game.hero.location.X, game.hero.location.Y + HERO_SPEED)
     if game.CheckHeroMovement(targetLocation) {
       game.hero.Up()
+      heroMoved = true
     }
   }
 
@@ -202,6 +212,16 @@ func (game *Game) HandleExplorationInputs() {
   }
   if game.win.JustReleased(pixelgl.KeyUp) || game.win.JustReleased(pixelgl.KeyW) {
     game.hero.sprite.StopAnimation()
+  }
+
+  if heroMoved {
+    connectedPlayer := NewConnectedPlayerFromHero(&game.hero)
+    connectedPlayer.CurrentRoomId = game.CurrentRoom.Id
+    jsonBytes, _ := json.Marshal(connectedPlayer)
+    SendSocketMessage(game.Conn, SocketMessage{
+      Event: "player-move",
+      JSONData: string(jsonBytes),
+    })
   }
 }
 

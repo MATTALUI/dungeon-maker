@@ -20,6 +20,7 @@ func init() {
   handlers = make(map[string]func(*Game, SocketMessage))
   on("connect", HandleConnect)
   on("player-join", HandlePlayerJoin)
+  on("player-move", HandlePlayerMove)
 }
 
 func on(event string, handler func(*Game, SocketMessage)) {
@@ -98,6 +99,23 @@ func HandlePlayerJoin(game *Game, message SocketMessage) {
     // You should not consider yourself a connected player
     if player.Id != game.hero.Id {
       game.ConnectedPlayers = append(game.ConnectedPlayers, player)
+    }
+  }
+}
+
+func HandlePlayerMove(game *Game, message SocketMessage) {
+  playerUpdate := ConnectedPlayer{}
+  json.Unmarshal([]byte(message.JSONData), &playerUpdate)
+
+  for i := 0; i < len(game.ConnectedPlayers); i++ {
+    player := &game.ConnectedPlayers[i]
+    if player.Id == playerUpdate.Id {
+      player.Location.X = playerUpdate.Location.X
+      player.Location.Y = playerUpdate.Location.Y
+      player.CurrentRoomId = playerUpdate.CurrentRoomId
+      player.Orientation = playerUpdate.Orientation
+
+      break
     }
   }
 }
