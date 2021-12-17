@@ -214,7 +214,7 @@ func (game *Game) HandleExplorationInputs() {
     game.hero.sprite.StopAnimation()
   }
 
-  if heroMoved {
+  if heroMoved && game.Conn != nil {
     connectedPlayer := NewConnectedPlayerFromHero(&game.hero)
     connectedPlayer.CurrentRoomId = game.CurrentRoom.Id
     jsonBytes, _ := json.Marshal(connectedPlayer)
