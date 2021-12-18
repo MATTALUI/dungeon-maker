@@ -27,7 +27,7 @@ const (
   DOOR_HALF_WIDTH = DOOR_WIDTH / 2
 )
 
-func NewGame() Game {
+func NewGame() *Game {
   game := Game{}
   game.ConnectedPlayers = make([]ConnectedPlayer, 0)
 
@@ -47,7 +47,7 @@ func NewGame() Game {
   game.hero.sprite.StopAnimation()
   game.mode = MODE_EXPLORATION
 
-  return game
+  return &game
 }
 
 type Game struct {
