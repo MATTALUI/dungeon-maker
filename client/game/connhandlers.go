@@ -115,6 +115,11 @@ func HandlePlayerMove(game *Game, message SocketMessage) {
       player.Location.Y = playerUpdate.Location.Y
       player.CurrentRoomId = playerUpdate.CurrentRoomId
       player.Orientation = playerUpdate.Orientation
+      if player.Orientation == LEFT {
+        player.Sprite.StartAnimation(LEFT)
+      } else if player.Orientation == RIGHT {
+        player.Sprite.StartAnimation(RIGHT)
+      }
 
       break
     }

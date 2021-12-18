@@ -1,12 +1,10 @@
 package game
 
 import (
-	_"fmt"
   "github.com/faiface/pixel"
 	"github.com/google/uuid"
 	"encoding/json"
 	"net"
-	_ "golang.org/x/image/colornames"
 )
 
 var (
@@ -15,7 +13,7 @@ var (
 
 func init() {
 	ghostAnimation = NewAnimatedSprite("assets/ghost.png")
-	ghostAnimation.fps = 10
+	ghostAnimation.fps = 6
 	ghostAnimation.AddAnimation(LEFT, []int{0, 2, 4, 6})
   ghostAnimation.AddAnimation(RIGHT, []int{1, 3, 5, 7 })
 	ghostAnimation.StartAnimation(LEFT)
@@ -64,9 +62,13 @@ func (player ConnectedPlayer) ToJson() string {
 func (player *ConnectedPlayer) SetAnimation() {
 	ghostCopy := ghostAnimation
 	player.Sprite = ghostCopy
-
+	player.Sprite.StartAnimation(LEFT)
 }
 
-func (player ConnectedPlayer) Draw(target pixel.Target) {
+func (player *ConnectedPlayer) Update() {
+	player.Sprite.NextFrame()
+}
+
+func (player *ConnectedPlayer) Draw(target pixel.Target) {
 	player.Sprite.Draw(target, player.Location)
 }

@@ -133,6 +133,9 @@ func (game *Game) InitWindow() {
 func (game *Game) Update() {
   game.HandleInputs()
   game.hero.Update()
+  for i := 0; i < len(game.ConnectedPlayers); i++ {
+    game.ConnectedPlayers[i].Update()
+  }
   game.ManageRoomChange()
 }
 
