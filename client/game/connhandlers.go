@@ -98,6 +98,7 @@ func HandlePlayerJoin(game *Game, message SocketMessage) {
   for _, player := range connectedPlayers {
     // You should not consider yourself a connected player
     if player.Id != game.hero.Id {
+      player.SetAnimation()
       game.ConnectedPlayers = append(game.ConnectedPlayers, player)
     }
   }

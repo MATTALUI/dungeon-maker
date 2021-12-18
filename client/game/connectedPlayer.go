@@ -1,12 +1,25 @@
 package game
 
 import (
+	_"fmt"
   "github.com/faiface/pixel"
 	"github.com/google/uuid"
 	"encoding/json"
 	"net"
-	"golang.org/x/image/colornames"
+	_ "golang.org/x/image/colornames"
 )
+
+var (
+	ghostAnimation AnimatedSprite
+)
+
+func init() {
+	ghostAnimation = NewAnimatedSprite("assets/ghost.png")
+	ghostAnimation.fps = 10
+	ghostAnimation.AddAnimation(LEFT, []int{0, 2, 4, 6})
+  ghostAnimation.AddAnimation(RIGHT, []int{1, 3, 5, 7 })
+	ghostAnimation.StartAnimation(LEFT)
+}
 
 type ConnectedPlayer struct {
 	Id string `json:"id"`
@@ -14,6 +27,7 @@ type ConnectedPlayer struct {
 	Orientation string `json:"orientation"`;
 	CurrentRoomId string `json:"currentRoomId"`;
 	Conn net.Conn `json:"-"`;
+	Sprite AnimatedSprite `json:"-"`;
 }
 
 func NewConnectedPlayer() ConnectedPlayer {
@@ -22,6 +36,7 @@ func NewConnectedPlayer() ConnectedPlayer {
 		Location: pixel.V(0,0),
 		Orientation: UP,
 	}
+	player.SetAnimation()
 
 	return player
 }
@@ -35,6 +50,7 @@ func NewConnectedPlayerFromHero(hero *Hero) ConnectedPlayer {
 	if len(player.Orientation) == 0 {
 		player.Orientation = UP
 	}
+	player.SetAnimation()
 
 	return player
 }
@@ -45,12 +61,12 @@ func (player ConnectedPlayer) ToJson() string {
 	return string(jsonStr)
 }
 
+func (player *ConnectedPlayer) SetAnimation() {
+	ghostCopy := ghostAnimation
+	player.Sprite = ghostCopy
+
+}
+
 func (player ConnectedPlayer) Draw(target pixel.Target) {
-	blx := player.Location.X - TILE_HALF
-	bly := player.Location.Y - TILE_HALF
-
-	trx := player.Location.X + TILE_HALF
-	try := player.Location.Y + TILE_HALF
-
-	DrawRect(target , colornames.Black, pixel.V(blx, bly), pixel.V(trx, try))
+	player.Sprite.Draw(target, player.Location)
 }
