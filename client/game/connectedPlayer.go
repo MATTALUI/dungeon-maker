@@ -5,6 +5,8 @@ import (
 	"github.com/google/uuid"
 	"encoding/json"
 	"net"
+	"os"
+	"errors"
 )
 
 var (
@@ -12,6 +14,12 @@ var (
 )
 
 func init() {
+	if _, err := os.Stat("assets/ghost.png"); errors.Is(err, os.ErrNotExist) {
+		// Welp. Since the server and the client both use this but not the assets
+		// then this will break the server. We don't need this init for  the server
+		// anyway. Life lessons are being learned...
+		return
+	}
 	ghostAnimation = NewAnimatedSprite("assets/ghost.png")
 	ghostAnimation.fps = 6
 	ghostAnimation.AddAnimation(LEFT, []int{0, 2, 4, 6})
