@@ -4,6 +4,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"encoding/json"
+  "time"
 )
 
 type AdventureGameState struct {
@@ -122,18 +123,31 @@ func (state AdventureGameState) CheckHeroMovement(game *Game, targetLocation pix
 }
 
 func (state AdventureGameState) ManageRoomChange(game *Game) {
+  roomChanged := false
   if game.hero.location.X < -TILE_SIZE { // Moved left
     game.hero.location.X = WINDOW_WIDTH + TILE_SIZE
     game.CurrentRoom = game.CurrentRoom.Left
+    roomChanged = true
   } else if game.hero.location.X > WINDOW_WIDTH + TILE_SIZE { // Moved right
     game.hero.location.X = -TILE_SIZE
     game.CurrentRoom = game.CurrentRoom.Right
+    roomChanged = true
   } else if game.hero.location.Y > WINDOW_HEIGHT + TILE_SIZE { // Moved up
     game.hero.location.Y = -TILE_SIZE
     game.CurrentRoom = game.CurrentRoom.Up
+    roomChanged = true
   } else if game.hero.location.Y < - TILE_SIZE { // Moved down
     game.hero.location.Y = WINDOW_HEIGHT + TILE_SIZE
     game.CurrentRoom = game.CurrentRoom.Down
+    roomChanged = true
+  }
+
+  if roomChanged && game.CurrentRoom.Id[0] == '0' {
+    // NOTE: This doesn't really affect anything in the game I just want to test dynamically adding states
+    go func (){
+      time.Sleep(time.Second)
+      game.GameStates.Push(NewDialogState("Wait a minute. There's something odd about this room..."))
+    }()
   }
 }
 

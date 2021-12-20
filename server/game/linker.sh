@@ -22,4 +22,5 @@ ln -s ../../client/game/graphicalRange.go ./graphicalRange.go
 ln -s ../../client/game/connectedPlayer.go ./connectedPlayer.go
 ln -s ../../client/game/gameState.go ./gameState.go
 ln -s ../../client/game/adventureGameState.go ./adventureGameState.go
+ln -s ../../client/game/dialogState.go ./dialogState.go
 echo "The deed is done"
