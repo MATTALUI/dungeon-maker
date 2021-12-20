@@ -18,12 +18,17 @@ const (
   GAME_NAME = "Danger Dungeon"
   DOOR_WIDTH = TILE_SIZE * 4
   INSET_SIZE = 50
+  DIALOG_MARGIN = 69
+  DIALOG_PADDING = 15
+  DIALOG_TEXT_HEIGHT = 18 // This was determined from the dialog box being scaled by 2. Changing scale will affect this.
+  DIALOG_TEXT_GAP = 5
 
   // DEPENDENT CONFIGS
   TILE_HALF = TILE_SIZE / 2
   WINDOW_MID_HEIGHT = WINDOW_HEIGHT / 2
   WINDOW_MID_WIDTH = WINDOW_WIDTH / 2
   DOOR_HALF_WIDTH = DOOR_WIDTH / 2
+  DIALOG_HEIGHT = WINDOW_HEIGHT / 4
 )
 
 func NewGame() *Game {
@@ -47,6 +52,7 @@ func NewGame() *Game {
 
   game.GameStates = NewGameStateStack()
   game.GameStates.Push(NewAdventureGameState())
+  game.GameStates.Push(NewDialogState("Welcome to " + GAME_NAME + "! In this game you will have the ability to go on a wild adventure through a series of randomly generated dungeons. In these dungeons you will find intrigue, danger, and riches you couldn't possibly imagine in your wildest dreams. You can open the play menu at any time by pressing ESC. Beware of the ghosts!"))
 
   return &game
 }

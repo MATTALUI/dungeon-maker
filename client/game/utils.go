@@ -1,6 +1,7 @@
 package game
 
 import (
+  "fmt"
   "math/rand"
   "time"
   "image"
@@ -9,6 +10,9 @@ import (
 	"github.com/faiface/pixel"
   "github.com/faiface/pixel/imdraw"
   "image/color"
+  "github.com/faiface/pixel/text"
+  "golang.org/x/image/font/basicfont"
+  "golang.org/x/image/colornames"
 )
 
 func init() {
@@ -61,6 +65,14 @@ func DrawRect(target pixel.Target, c color.Color, p1 pixel.Vec, p2 pixel.Vec) {
 	imd.Polygon(0)
 
   imd.Draw(target)
+}
+
+func DrawText(target pixel.Target, message string, location pixel.Vec, mat pixel.Matrix) {
+  atlas := text.NewAtlas(basicfont.Face7x13, text.ASCII)
+  basicTxt := text.New(location, atlas)
+  basicTxt.Color = colornames.White
+  fmt.Fprintln(basicTxt, message)
+  basicTxt.Draw(target, mat)
 }
 
 func DrawEntrance(target pixel.Target, direction string) {

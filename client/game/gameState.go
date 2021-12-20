@@ -12,8 +12,8 @@ type GameStateStack struct {
 func (stack *GameStateStack) Pop() GameState {
 	gameState := stack.States[len(stack.States) - 1]
 	newStates := make([]GameState, 0)
-	for _, state := range stack.States {
-		if state != gameState {
+	for index, state := range stack.States {
+		if index < len(stack.States) - 1 {
 			newStates = append(newStates, state)
 		}
 	}
