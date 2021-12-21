@@ -33,6 +33,9 @@ func (state AdventureGameState) Draw(game *Game) {
 func (state AdventureGameState) HandleInputs(game *Game) {
 	heroMoved := false
   // PRESS ONLY CONTROLS
+  if game.win.JustPressed(pixelgl.KeyEscape) {
+    game.GameStates.Push(NewPauseMenuState())
+  }
   if game.win.JustPressed(pixelgl.KeyLeft) || game.win.JustPressed(pixelgl.KeyA) {
     game.hero.sprite.StartAnimation(LEFT)
   }

@@ -67,6 +67,18 @@ func DrawRect(target pixel.Target, c color.Color, p1 pixel.Vec, p2 pixel.Vec) {
   imd.Draw(target)
 }
 
+func DrawMenuArrow(target pixel.Target, bottomLeft pixel.Vec) {
+  imd := imdraw.New(nil)
+
+	imd.Color = colornames.White
+	imd.Push(bottomLeft)
+	imd.Push(pixel.V(bottomLeft.X, bottomLeft.Y + DIALOG_TEXT_HEIGHT))
+  imd.Push(pixel.V(bottomLeft.X + DIALOG_TEXT_HEIGHT, bottomLeft.Y + (DIALOG_TEXT_HEIGHT/ 2.0 )))
+	imd.Polygon(0)
+
+  imd.Draw(target)
+}
+
 func DrawText(target pixel.Target, message string, location pixel.Vec, mat pixel.Matrix) {
   atlas := text.NewAtlas(basicfont.Face7x13, text.ASCII)
   basicTxt := text.New(location, atlas)

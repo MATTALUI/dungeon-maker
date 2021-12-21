@@ -52,7 +52,7 @@ func NewGame() *Game {
 
   game.GameStates = NewGameStateStack()
   game.GameStates.Push(NewAdventureGameState())
-  game.GameStates.Push(NewDialogState("Welcome to " + GAME_NAME + "! In this game you will have the ability to go on a wild adventure through a series of randomly generated dungeons. In these dungeons you will find intrigue, danger, and riches you couldn't possibly imagine in your wildest dreams. You can open the play menu at any time by pressing ESC. Beware of the ghosts!"))
+  // game.GameStates.Push(NewDialogState("Welcome to " + GAME_NAME + "! In this game you will have the ability to go on a wild adventure through a series of randomly generated dungeons. In these dungeons you will find intrigue, danger, and riches you couldn't possibly imagine in your wildest dreams. You can open the play menu at any time by pressing ESC. Beware of the ghosts!"))
 
   return &game
 }
