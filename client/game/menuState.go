@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"os"
 	"golang.org/x/image/colornames"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
@@ -97,7 +98,11 @@ func NewPauseMenuState() MenuState {
 
 	// "Quit" Option
 	quitOption := MenuOption{
-		DisplayName: "Quit",
+		DisplayName: "Quit Game",
+	}
+	quitOption.Handler = func (game *Game) {
+		// TODO: It would be nice to have an exit state that exits once its updated so we could do fun messages or something.
+		os.Exit(0)
 	}
 	state.MenuOptions = append(state.MenuOptions, quitOption)
 
