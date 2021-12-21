@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"golang.org/x/image/colornames"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
@@ -8,6 +9,7 @@ import (
 
 type MenuOption struct {
 	DisplayName string;
+	Handler func(*Game)
 }
 
 type MenuState struct {
@@ -56,6 +58,13 @@ func (state MenuState) HandleInputs(game *Game) {
 			*state.CurrentSelection = len(state.MenuOptions) - 1
 		}
   }
+	if game.win.JustPressed(pixelgl.KeyEnter) {
+		selectedIndex := *state.CurrentSelection
+		selectedHandler := state.MenuOptions[selectedIndex].Handler
+		if selectedHandler != nil {
+			selectedHandler(game)	
+		}
+	}
 }
 
 func NewPauseMenuState() MenuState {
@@ -76,6 +85,15 @@ func NewPauseMenuState() MenuState {
 		DisplayName: "Options",
 	}
 	state.MenuOptions = append(state.MenuOptions, optionsOption)
+
+	// "Test" Option
+	testOption := MenuOption{
+		DisplayName: "Test",
+	}
+	testOption.Handler = func(game *Game) {
+		fmt.Println("Wahoo! This function is getting fired!")
+	}
+	state.MenuOptions = append(state.MenuOptions, testOption)
 
 	// "Quit" Option
 	quitOption := MenuOption{
