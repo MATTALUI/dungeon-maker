@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"os"
 	"golang.org/x/image/colornames"
 	"github.com/faiface/pixel"
@@ -23,10 +22,13 @@ func (state MenuState) Update(game *Game) {
 }
 
 func (state MenuState) Draw(game *Game) {
-	bottomLeft := pixel.V(INSET_SIZE, INSET_SIZE)
-  topRight := pixel.V(WINDOW_WIDTH - INSET_SIZE, WINDOW_HEIGHT - INSET_SIZE)
+	menuWidth := float64((DIALOG_PADDING * 2) + (state.GetLongestOptionSize() * DIALOG_TEXT_WIDTH) + (DIALOG_TEXT_WIDTH * 2))
+	menuHeight := float64((DIALOG_PADDING * 2) + ((DIALOG_TEXT_HEIGHT + DIALOG_TEXT_GAP) * len(state.MenuOptions)))
+	bottomLeft := pixel.V(INSET_SIZE, WINDOW_HEIGHT - INSET_SIZE - menuHeight)
+  topRight := pixel.V(bottomLeft.X + menuWidth, WINDOW_HEIGHT - INSET_SIZE)
 	selectorX := bottomLeft.X + DIALOG_PADDING
 	dialogX := bottomLeft.X + DIALOG_PADDING + DIALOG_TEXT_HEIGHT + (DIALOG_TEXT_GAP / 2)
+	DrawRect(game.win, colornames.White, pixel.V(bottomLeft.X - DIALOG_BORDER_WIDTH, bottomLeft.Y - DIALOG_BORDER_WIDTH), pixel.V(topRight.X + DIALOG_BORDER_WIDTH, topRight.Y + DIALOG_BORDER_WIDTH))
 	DrawRect(game.win, colornames.Black, bottomLeft, topRight)
 
 	for index, option := range state.MenuOptions {		
@@ -68,12 +70,35 @@ func (state MenuState) HandleInputs(game *Game) {
 	}
 }
 
+func (state MenuState) GetLongestOptionSize() int {
+	longest := 0
+	for _, option := range state.MenuOptions {
+		if len(option.DisplayName) > longest {
+			longest = len(option.DisplayName)
+		}
+	}
+
+	return longest
+}
+
 func NewPauseMenuState() MenuState {
 	currentSelection := 0
 	state := MenuState{
 		CurrentSelection: &currentSelection,
 	}
 	state.MenuOptions = make([]MenuOption, 0)
+
+	// "View Map" Option
+	mapOption := MenuOption{
+		DisplayName: "View Map",
+	}
+	state.MenuOptions = append(state.MenuOptions, mapOption)
+
+	// "Inventory" Option
+	inventoryOption := MenuOption{
+		DisplayName: "Inventory",
+	}
+	state.MenuOptions = append(state.MenuOptions, inventoryOption)
 
 	// "How to Play" Option
 	htpOption := MenuOption{
@@ -87,14 +112,14 @@ func NewPauseMenuState() MenuState {
 	}
 	state.MenuOptions = append(state.MenuOptions, optionsOption)
 
-	// "Test" Option
-	testOption := MenuOption{
-		DisplayName: "Test",
+	// "Close Menu" Option
+	closeOption := MenuOption{
+		DisplayName: "Close Menu",
 	}
-	testOption.Handler = func(game *Game) {
-		fmt.Println("Wahoo! This function is getting fired!")
+	closeOption.Handler = func (game *Game) {
+		game.GameStates.Pop()
 	}
-	state.MenuOptions = append(state.MenuOptions, testOption)
+	state.MenuOptions = append(state.MenuOptions, closeOption)
 
 	// "Quit" Option
 	quitOption := MenuOption{
@@ -105,7 +130,6 @@ func NewPauseMenuState() MenuState {
 		os.Exit(0)
 	}
 	state.MenuOptions = append(state.MenuOptions, quitOption)
-
 
 	return state
 }

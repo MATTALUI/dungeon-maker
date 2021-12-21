@@ -22,6 +22,8 @@ const (
   DIALOG_PADDING = 15
   DIALOG_TEXT_HEIGHT = 18 // This was determined from the dialog box being scaled by 2. Changing scale will affect this.
   DIALOG_TEXT_GAP = 5
+  DIALOG_TEXT_WIDTH = 14
+  DIALOG_BORDER_WIDTH = 5
 
   // DEPENDENT CONFIGS
   TILE_HALF = TILE_SIZE / 2
@@ -52,7 +54,7 @@ func NewGame() *Game {
 
   game.GameStates = NewGameStateStack()
   game.GameStates.Push(NewAdventureGameState())
-  // game.GameStates.Push(NewDialogState("Welcome to " + GAME_NAME + "! In this game you will have the ability to go on a wild adventure through a series of randomly generated dungeons. In these dungeons you will find intrigue, danger, and riches you couldn't possibly imagine in your wildest dreams. You can open the play menu at any time by pressing ESC. Beware of the ghosts!"))
+  game.GameStates.Push(NewDialogState("Welcome to " + GAME_NAME + "! You can open the play menu at any time by pressing ESC. Have fun!"))
 
   return &game
 }

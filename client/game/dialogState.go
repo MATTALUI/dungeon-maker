@@ -20,6 +20,7 @@ func (state DialogState) Update(game *Game) {
 func (state DialogState) Draw(game *Game) {
 	bl := pixel.V(INSET_SIZE + DIALOG_MARGIN, WINDOW_HEIGHT - DIALOG_HEIGHT - DIALOG_HEIGHT)
 	tr := pixel.V(WINDOW_WIDTH - INSET_SIZE - DIALOG_MARGIN, WINDOW_HEIGHT - DIALOG_HEIGHT)
+	DrawRect(game.win, colornames.White, pixel.V(bl.X - DIALOG_BORDER_WIDTH, bl.Y - DIALOG_BORDER_WIDTH), pixel.V(tr.X + DIALOG_BORDER_WIDTH, tr.Y + DIALOG_BORDER_WIDTH))
 	DrawRect(game.win, colornames.Black, bl, tr)
 
 	for index, line := range state.Pages[*state.CurrentPage] {
@@ -53,10 +54,9 @@ func NewDialogState(message string) DialogState {
 		Message: message,
 		Pages: make([][]string, 0),
 	}
-	approxCharWidth := 14
 	dialogWidth := (WINDOW_WIDTH - INSET_SIZE - DIALOG_MARGIN) - (INSET_SIZE + DIALOG_MARGIN)
 	maxLinesPerPage := (DIALOG_HEIGHT - (DIALOG_PADDING * 2)) / (DIALOG_TEXT_GAP + DIALOG_TEXT_HEIGHT)
-	maxCharPerLine := (dialogWidth - (DIALOG_PADDING * 2)) / approxCharWidth
+	maxCharPerLine := (dialogWidth - (DIALOG_PADDING * 2)) / DIALOG_TEXT_WIDTH
 	words := strings.Split(message, " ")
 
 	currentRow := ""
