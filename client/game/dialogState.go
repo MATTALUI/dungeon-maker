@@ -2,7 +2,6 @@ package game
 
 import (
 	"strings"
-	"golang.org/x/image/colornames"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
@@ -20,8 +19,7 @@ func (state DialogState) Update(game *Game) {
 func (state DialogState) Draw(game *Game) {
 	bl := pixel.V(INSET_SIZE + DIALOG_MARGIN, WINDOW_HEIGHT - DIALOG_HEIGHT - DIALOG_HEIGHT)
 	tr := pixel.V(WINDOW_WIDTH - INSET_SIZE - DIALOG_MARGIN, WINDOW_HEIGHT - DIALOG_HEIGHT)
-	DrawRect(game.win, colornames.White, pixel.V(bl.X - DIALOG_BORDER_WIDTH, bl.Y - DIALOG_BORDER_WIDTH), pixel.V(tr.X + DIALOG_BORDER_WIDTH, tr.Y + DIALOG_BORDER_WIDTH))
-	DrawRect(game.win, colornames.Black, bl, tr)
+	DrawPanel(game.win, bl, tr)
 
 	for index, line := range state.Pages[*state.CurrentPage] {
 		offset := index * (DIALOG_TEXT_GAP + DIALOG_TEXT_HEIGHT)

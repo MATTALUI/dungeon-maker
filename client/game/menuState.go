@@ -2,7 +2,6 @@ package game
 
 import (
 	"os"
-	"golang.org/x/image/colornames"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
@@ -28,8 +27,7 @@ func (state MenuState) Draw(game *Game) {
   topRight := pixel.V(bottomLeft.X + menuWidth, WINDOW_HEIGHT - INSET_SIZE)
 	selectorX := bottomLeft.X + DIALOG_PADDING
 	dialogX := bottomLeft.X + DIALOG_PADDING + DIALOG_TEXT_HEIGHT + (DIALOG_TEXT_GAP / 2)
-	DrawRect(game.win, colornames.White, pixel.V(bottomLeft.X - DIALOG_BORDER_WIDTH, bottomLeft.Y - DIALOG_BORDER_WIDTH), pixel.V(topRight.X + DIALOG_BORDER_WIDTH, topRight.Y + DIALOG_BORDER_WIDTH))
-	DrawRect(game.win, colornames.Black, bottomLeft, topRight)
+	DrawPanel(game.win, bottomLeft, topRight)
 
 	for index, option := range state.MenuOptions {		
 		offset := index * (DIALOG_TEXT_GAP + DIALOG_TEXT_HEIGHT)

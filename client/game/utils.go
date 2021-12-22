@@ -67,6 +67,11 @@ func DrawRect(target pixel.Target, c color.Color, p1 pixel.Vec, p2 pixel.Vec) {
   imd.Draw(target)
 }
 
+func DrawPanel(target pixel.Target, p1 pixel.Vec, p2 pixel.Vec) {
+  DrawRect(target, colornames.White, pixel.V(p1.X - DIALOG_BORDER_WIDTH, p1.Y - DIALOG_BORDER_WIDTH), pixel.V(p2.X + DIALOG_BORDER_WIDTH, p2.Y + DIALOG_BORDER_WIDTH))
+	DrawRect(target, colornames.Black, p1, p2)
+}
+
 func DrawMenuArrow(target pixel.Target, bottomLeft pixel.Vec) {
   imd := imdraw.New(nil)
 
