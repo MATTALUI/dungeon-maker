@@ -1,7 +1,6 @@
 package game
 
 import (
-	"os"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
@@ -124,8 +123,9 @@ func NewPauseMenuState() MenuState {
 		DisplayName: "Quit Game",
 	}
 	quitOption.Handler = func (game *Game) {
-		// TODO: It would be nice to have an exit state that exits once its updated so we could do fun messages or something.
-		os.Exit(0)
+		game.GameStates.Pop()
+		game.GameStates.Push(NewExitState())
+		game.GameStates.Push(NewDialogState("Goodbye!"))
 	}
 	state.MenuOptions = append(state.MenuOptions, quitOption)
 

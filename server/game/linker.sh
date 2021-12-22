@@ -24,4 +24,5 @@ ln -s ../../client/game/gameState.go ./gameState.go
 ln -s ../../client/game/adventureGameState.go ./adventureGameState.go
 ln -s ../../client/game/dialogState.go ./dialogState.go
 ln -s ../../client/game/menuState.go ./menuState.go
+ln -s ../../client/game/exitState.go ./exitState.go
 echo "The deed is done"

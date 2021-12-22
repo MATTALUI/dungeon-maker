@@ -53,6 +53,7 @@ func NewGame() *Game {
   game.hero.sprite.StopAnimation()
 
   game.GameStates = NewGameStateStack()
+  game.GameStates.Push(NewExitState())
   game.GameStates.Push(NewAdventureGameState())
   game.GameStates.Push(NewDialogState("Welcome to " + GAME_NAME + "! You can open the play menu at any time by pressing ESC. Have fun!"))
 
