@@ -57,6 +57,8 @@ func NewGame() *Game {
   game.hero.sprite.StartAnimation(opposites[game.dungeon.StartingRoom.Entrance])
   game.hero.sprite.StopAnimation()
 
+  game.TargetRoom = game.dungeon.Rooms[len(game.dungeon.Rooms) - 1]
+
   game.GameStates = NewGameStateStack()
   game.GameStates.Push(NewExitState())
   game.GameStates.Push(NewAdventureGameState())
@@ -74,7 +76,9 @@ type Game struct {
   CurrentRoom *Room;
   Conn net.Conn;
   ConnectedPlayers []ConnectedPlayer;
-  GameStates GameStateStack
+  GameStates GameStateStack;
+  TargetRoom *Room;
+  PathfinderPath []*Room;
 }
 
 func (game *Game) Run() {
@@ -99,6 +103,7 @@ func (game *Game) Run() {
 		default:
 		}
 
+    game.ManagePath()
     game.GameStates.CurrentState().Update(game)
     for _, state := range game.GameStates.States {
       state.Draw(game)
@@ -147,4 +152,16 @@ func (game *Game) InitWindow() {
 	}
 
   game.win = win
+}
+
+func (game *Game) ManagePath() {
+  if game.TargetRoom != nil {
+    game.PathfinderPath = FindPathDijkstra(game.dungeon.Rooms, game.CurrentRoom, game.TargetRoom)
+  } else {
+    game.PathfinderPath = nil
+  }
+}
+
+func (game *Game) HasPath() bool {
+  return game.TargetRoom != nil && game.PathfinderPath != nil && len(game.PathfinderPath) > 0
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"golang.org/x/image/colornames"
+	"github.com/faiface/pixel/imdraw"
 )
 
 type MapState struct {
@@ -31,6 +32,7 @@ func (state MapState) Draw(game *Game) {
 	tr := pixel.V(WINDOW_WIDTH - INSET_SIZE, WINDOW_HEIGHT - INSET_SIZE)
 	DrawPanel(game.win, bl, tr)
 
+	// Draw the rooms on the map
 	for _, room := range game.dungeon.Rooms {
 		if room.Coords.Z == *state.CurrentFloor {
 			state.DrawRoom(game, room)
@@ -40,6 +42,7 @@ func (state MapState) Draw(game *Game) {
 		state.DrawRoom(game, game.dungeon.StartingRoom)
 	}
 
+	// Draw Floor Menu
 	for i := 0; i < game.dungeon.FloorCount(); i++ {
 		index := game.dungeon.FloorCount() - i
 		offset := i * (DIALOG_TEXT_GAP + DIALOG_TEXT_HEIGHT)
@@ -54,6 +57,11 @@ func (state MapState) Draw(game *Game) {
 			bottomLeft := pixel.V(selectorX, tr.Y - float64(DIALOG_TEXT_HEIGHT)- float64(DIALOG_PADDING) - float64(offset))
 			DrawMenuArrow(game.win, bottomLeft)
 		}
+	}
+
+	// Draw paths
+	if game.HasPath() {
+		state.DrawPath(game)
 	}
 }
 
@@ -131,15 +139,32 @@ func (state MapState) DrawRoom(game *Game, room *Room) {
 
   if room.IsFirstRoom {
     color = colornames.Red
+  } else if room == game.TargetRoom {
+    color = colornames.Yellow
   }
 	if *state.FlashOn && room == game.CurrentRoom {
     color = colornames.White
   }
-	// else if isTarget {
-  //   color = colornames.Yellow
-  // }
 
   DrawRect(game.win, color, bottomLeft, topRight)
+}
+
+func (state MapState) DrawPath(game *Game) {
+	path := game.PathfinderPath
+  imd := imdraw.New(nil)
+
+	imd.Color = colornames.Yellow
+	imd.EndShape = imdraw.RoundEndShape
+
+  for i := 0; i < len(path) - 1; i++ {
+    from := path[i]
+    to := path[i + 1]
+
+    imd.Push(state.GetCenterPointOfRoom(game, from), state.GetCenterPointOfRoom(game, to))
+  }
+
+	imd.Line(MAP_PADDING / float64(4.0))
+  imd.Draw(game.win)
 }
 
 func (state MapState) GetCenterPointOfRoom(game *Game, room *Room) pixel.Vec {
