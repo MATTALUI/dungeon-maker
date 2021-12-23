@@ -203,3 +203,14 @@ func (dungeon *Dungeon) ToJson() string {
 
   return jsonData
 }
+
+func (dungeon *Dungeon) FloorCount() int {
+  floorLevel := 0
+  for _, room := range dungeon.Rooms {
+    if room.Coords.Z > floorLevel {
+      floorLevel = room.Coords.Z
+    }
+  }
+
+  return floorLevel + 1
+}

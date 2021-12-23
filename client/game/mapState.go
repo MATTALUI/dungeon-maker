@@ -1,29 +1,23 @@
 package game
 
 import (
+	// "fmt"
 	"time"
+	"strconv"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"golang.org/x/image/colornames"
 )
 
-var (
-  
-  // MAX_ROOMS = float64(9.0)
-  CONNECTION_WIDTH = float64(6.0)
-  // WINDOW_DIM = float64((MAP_ROOM_BLOCK_SIZE + MAP_PADDING) * MAX_ROOMS * 1.5)
-  // WINDOW_MID = WINDOW_DIM / float64(2.0)
-  // HALF_PAD = MAP_PADDING / float64(2.0)
-  HALF_CONNECTION_WIDTH = CONNECTION_WIDTH / float64(2.0)
-)
-
 type MapState struct {
 	LastBlinkTime *time.Time
 	FlashOn *bool
+	CurrentFloor *int
 }
 
 func (state MapState) Update(game *Game) {
 	state.HandleInputs(game)
+	// fmt.Println(*state.CurrentFloor)
 	fps := 4
 	threshold := time.Second.Milliseconds() / int64(fps)
 	if time.Since(*state.LastBlinkTime).Milliseconds() >= threshold {
@@ -38,14 +32,48 @@ func (state MapState) Draw(game *Game) {
 	DrawPanel(game.win, bl, tr)
 
 	for _, room := range game.dungeon.Rooms {
-		state.DrawRoom(game, room)
+		if room.Coords.Z == *state.CurrentFloor {
+			state.DrawRoom(game, room)
+		}
 	}
-	state.DrawRoom(game, game.dungeon.StartingRoom)
+	if *state.CurrentFloor == 0 {
+		state.DrawRoom(game, game.dungeon.StartingRoom)
+	}
+
+	for i := 0; i < game.dungeon.FloorCount(); i++ {
+		index := game.dungeon.FloorCount() - i
+		offset := i * (DIALOG_TEXT_GAP + DIALOG_TEXT_HEIGHT)
+		dialogX := bl.X + DIALOG_PADDING + DIALOG_TEXT_HEIGHT + (DIALOG_TEXT_GAP / 2)
+		selectorX := bl.X + DIALOG_PADDING
+		textLocation := pixel.V(dialogX, tr.Y - float64(DIALOG_TEXT_HEIGHT)- float64(DIALOG_PADDING) - float64(offset))
+		DrawText(game.win, "Floor " + strconv.Itoa(index), textLocation, pixel.IM.Scaled(textLocation, 2.0))
+		
+		
+
+		if index - 1 == *state.CurrentFloor {
+			bottomLeft := pixel.V(selectorX, tr.Y - float64(DIALOG_TEXT_HEIGHT)- float64(DIALOG_PADDING) - float64(offset))
+			DrawMenuArrow(game.win, bottomLeft)
+		}
+	}
 }
 
 func (state MapState) HandleInputs(game *Game) {
 	if game.win.JustPressed(pixelgl.KeyEscape) {
     game.GameStates.Pop()
+  }
+	if game.win.JustPressed(pixelgl.KeyDown) || game.win.JustPressed(pixelgl.KeyS) {
+    *state.CurrentFloor--
+
+		if *state.CurrentFloor < 0 {
+			*state.CurrentFloor = 0
+		}
+  }
+  if game.win.JustPressed(pixelgl.KeyUp) || game.win.JustPressed(pixelgl.KeyW) {
+    *state.CurrentFloor++
+
+		if *state.CurrentFloor == game.dungeon.FloorCount() {
+			*state.CurrentFloor--
+		}
   }
 }
 
@@ -55,10 +83,10 @@ func (state MapState) DrawRoom(game *Game, room *Room) {
 	color := colornames.Darkslategray
 
 	if room.HasUpDoor() { // TOP
-    blx := topRight.X - MAP_ROOM_BLOCK_MID - HALF_CONNECTION_WIDTH
+    blx := topRight.X - MAP_ROOM_BLOCK_MID - MAP_HALF_CONNECTION_WIDTH
     bly := topRight.Y
 
-    trx := blx + CONNECTION_WIDTH
+    trx := blx + MAP_CONNECTION_WIDTH
     try := bly + MAP_PADDING
 
     DrawRect(game.win, colornames.Darkgreen, pixel.V(blx, bly), pixel.V(trx, try))
@@ -66,19 +94,19 @@ func (state MapState) DrawRoom(game *Game, room *Room) {
 
   if room.HasRightDoor() { // RIGHT
     blx := topRight.X
-    bly := topRight.Y - MAP_ROOM_BLOCK_MID - HALF_CONNECTION_WIDTH
+    bly := topRight.Y - MAP_ROOM_BLOCK_MID - MAP_HALF_CONNECTION_WIDTH
 
     trx := blx + MAP_PADDING
-    try := bly + CONNECTION_WIDTH
+    try := bly + MAP_CONNECTION_WIDTH
 
     DrawRect(game.win, colornames.Darkgreen, pixel.V(blx, bly), pixel.V(trx, try))
   }
 
   if room.HasDownDoor() { // BOTTOM
-    blx := bottomLeft.X + MAP_ROOM_BLOCK_MID - HALF_CONNECTION_WIDTH
+    blx := bottomLeft.X + MAP_ROOM_BLOCK_MID - MAP_HALF_CONNECTION_WIDTH
     bly := bottomLeft.Y - MAP_PADDING
 
-    trx := bottomLeft.X + MAP_ROOM_BLOCK_MID + HALF_CONNECTION_WIDTH
+    trx := bottomLeft.X + MAP_ROOM_BLOCK_MID + MAP_HALF_CONNECTION_WIDTH
     try := bottomLeft.Y
 
     // NOTE: I suspect this might not always work. Especially if it's not a flat dungeon.
@@ -93,10 +121,10 @@ func (state MapState) DrawRoom(game *Game, room *Room) {
 
   if room.HasLeftDoor() { // LEFT
     blx := bottomLeft.X - MAP_PADDING
-    bly := bottomLeft.Y + MAP_ROOM_BLOCK_MID - HALF_CONNECTION_WIDTH
+    bly := bottomLeft.Y + MAP_ROOM_BLOCK_MID - MAP_HALF_CONNECTION_WIDTH
 
     trx := bottomLeft.X
-    try := bottomLeft.Y + MAP_ROOM_BLOCK_MID + HALF_CONNECTION_WIDTH
+    try := bottomLeft.Y + MAP_ROOM_BLOCK_MID + MAP_HALF_CONNECTION_WIDTH
 
     DrawRect(game.win, colornames.Darkgreen, pixel.V(blx, bly), pixel.V(trx, try))
   }
@@ -136,9 +164,11 @@ func (state MapState) GetTopRight(game *Game, room *Room) pixel.Vec {
 func NewMapState() MapState {
 	flashOn := true
 	lastBlinkTime := time.Now()
+	currentFloor := 0
 	state := MapState{
 		FlashOn: &flashOn,
 		LastBlinkTime: &lastBlinkTime,
+		CurrentFloor: &currentFloor,
 	}
 
 	return state
