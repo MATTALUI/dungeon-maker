@@ -24,6 +24,8 @@ const (
   DIALOG_TEXT_GAP = 5
   DIALOG_TEXT_WIDTH = 14
   DIALOG_BORDER_WIDTH = 5
+  MAP_ROOM_BLOCK_SIZE = 32
+  MAP_PADDING = 8
 
   // DEPENDENT CONFIGS
   TILE_HALF = TILE_SIZE / 2
@@ -31,6 +33,7 @@ const (
   WINDOW_MID_WIDTH = WINDOW_WIDTH / 2
   DOOR_HALF_WIDTH = DOOR_WIDTH / 2
   DIALOG_HEIGHT = WINDOW_HEIGHT / 4
+  MAP_ROOM_BLOCK_MID = MAP_ROOM_BLOCK_SIZE / 2
 )
 
 func NewGame() *Game {
@@ -43,7 +46,7 @@ func NewGame() *Game {
     game.LoadFromConnection()
     go AwaitMessages(&game)
   } else {
-    game.dungeon = GenerateDungeon()
+    game.dungeon = GenerateFlatDungeon()
   }
 
   game.dungeon.Display()
@@ -55,7 +58,7 @@ func NewGame() *Game {
   game.GameStates = NewGameStateStack()
   game.GameStates.Push(NewExitState())
   game.GameStates.Push(NewAdventureGameState())
-  game.GameStates.Push(NewDialogState("Welcome to " + GAME_NAME + "! You can open the play menu at any time by pressing ESC. Have fun!"))
+  // game.GameStates.Push(NewDialogState("Welcome to " + GAME_NAME + "! You can open the play menu at any time by pressing ESC. Have fun!"))
 
   return &game
 }

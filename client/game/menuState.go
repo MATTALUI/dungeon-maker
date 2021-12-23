@@ -95,6 +95,9 @@ func NewPauseMenuState() MenuState {
 	mapOption := MenuOption{
 		DisplayName: "View Map",
 	}
+	mapOption.Handler = func(game *Game) {
+		game.GameStates.Push(NewMapState())
+	}
 	state.MenuOptions = append(state.MenuOptions, mapOption)
 
 	// "Inventory" Option
@@ -109,7 +112,7 @@ func NewPauseMenuState() MenuState {
 	}
 	htpOption.Handler = func (game *Game) {
 		// game.GameStates.Pop()
-		game.GameStates.Push(NewDialogState("ESC - Open Play Menu \n WASD/ARROWS - Move Hero"))
+		game.GameStates.Push(NewDialogState("ESC - Open Play Menu And Close Menus \n WASD/ARROWS - Move Hero"))
 	}
 	state.MenuOptions = append(state.MenuOptions, htpOption)
 	
