@@ -159,8 +159,11 @@ func (state MapState) DrawPath(game *Game) {
   for i := 0; i < len(path) - 1; i++ {
     from := path[i]
     to := path[i + 1]
+		if from.Coords.Z == *state.CurrentFloor {
+			imd.Push(state.GetCenterPointOfRoom(game, from), state.GetCenterPointOfRoom(game, to))
+		} else {
 
-    imd.Push(state.GetCenterPointOfRoom(game, from), state.GetCenterPointOfRoom(game, to))
+		}
   }
 
 	imd.Line(MAP_PADDING / float64(4.0))

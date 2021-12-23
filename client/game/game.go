@@ -48,7 +48,7 @@ func NewGame() *Game {
     game.LoadFromConnection()
     go AwaitMessages(&game)
   } else {
-    game.dungeon = GenerateFlatDungeon()
+    game.dungeon = GenerateDungeon()
   }
 
   game.dungeon.Display()
