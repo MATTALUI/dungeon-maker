@@ -61,6 +61,23 @@ func NewDialogState(message string) DialogState {
 	currentPage := make([]string, 0)
 	for _, word := range words {
 		wordLen := len(word) + 1 // We add 1 here in order to account for the spaces
+		if word == "\n" {
+			currentPage = append(currentPage, currentRow)
+			currentRow = ""
+			if len(currentPage) == maxLinesPerPage {
+				state.Pages = append(state.Pages, currentPage)
+				currentPage = make([]string, 0)
+			}
+
+			continue
+		} else if word == "\\p" {
+			currentPage = append(currentPage, currentRow)
+			state.Pages = append(state.Pages, currentPage)
+			currentRow = ""
+			currentPage = make([]string, 0)
+			
+			continue
+		}
 		if len(currentRow) + wordLen < maxCharPerLine {
 			if len(currentRow) > 0 {
 				currentRow = currentRow + " "
