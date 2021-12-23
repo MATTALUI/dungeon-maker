@@ -92,6 +92,13 @@ func DrawText(target pixel.Target, message string, location pixel.Vec, mat pixel
   basicTxt.Draw(target, mat)
 }
 
+func DrawStrikethroughText(target pixel.Target, message string, location pixel.Vec, mat pixel.Matrix) {
+  DrawText(target, message, location, mat)
+  strBl := pixel.V(location.X, location.Y + (DIALOG_TEXT_HEIGHT / 2) - 1)
+	strTr := pixel.V(location.X + float64(DIALOG_TEXT_WIDTH * len(message)), location.Y + (DIALOG_TEXT_HEIGHT / 2) + 1)
+	DrawRect(target, colornames.White, strBl, strTr)
+}
+
 func DrawEntrance(target pixel.Target, direction string) {
   p1 := doorCoords[direction][0]
   p2 := doorCoords[direction][1]

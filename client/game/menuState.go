@@ -31,7 +31,13 @@ func (state MenuState) Draw(game *Game) {
 	for index, option := range state.MenuOptions {		
 		offset := index * (DIALOG_TEXT_GAP + DIALOG_TEXT_HEIGHT)
 		textLocation := pixel.V(dialogX, topRight.Y - float64(DIALOG_TEXT_HEIGHT)- float64(DIALOG_PADDING) - float64(offset))
-		DrawText(game.win, option.DisplayName, textLocation, pixel.IM.Scaled(textLocation, 2.0))
+		if option.Handler == nil {
+			DrawStrikethroughText(game.win, option.DisplayName, textLocation, pixel.IM.Scaled(textLocation, 2.0))
+		} else {
+			DrawText(game.win, option.DisplayName, textLocation, pixel.IM.Scaled(textLocation, 2.0))
+		}
+		
+		
 
 		if index == *state.CurrentSelection {
 			bottomLeft := pixel.V(selectorX, topRight.Y - float64(DIALOG_TEXT_HEIGHT)- float64(DIALOG_PADDING) - float64(offset))
@@ -100,6 +106,10 @@ func NewPauseMenuState() MenuState {
 	// "How to Play" Option
 	htpOption := MenuOption{
 		DisplayName: "How to Play",
+	}
+	htpOption.Handler = func (game *Game) {
+		// game.GameStates.Pop()
+		game.GameStates.Push(NewDialogState("ESC - Open Play Menu \n WASD/ARROWS - Move Hero"))
 	}
 	state.MenuOptions = append(state.MenuOptions, htpOption)
 	
