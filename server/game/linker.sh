@@ -26,4 +26,5 @@ ln -s ../../client/game/dialogState.go ./dialogState.go
 ln -s ../../client/game/menuState.go ./menuState.go
 ln -s ../../client/game/exitState.go ./exitState.go
 ln -s ../../client/game/mapState.go ./mapState.go
+ln -s ../../client/game/dijkstra.go ./dijkstra.go
 echo "The deed is done"
