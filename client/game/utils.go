@@ -117,3 +117,7 @@ func DrawEntrance(target pixel.Target, direction string) {
 
   imd.Draw(target)
 }
+
+func CalculateMidPoint(p1 pixel.Vec, p2 pixel.Vec) pixel.Vec {
+  return pixel.V((p1.X + p2.X)/2, (p1.Y + p2.Y)/2)
+}

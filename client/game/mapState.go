@@ -1,7 +1,6 @@
 package game
 
 import (
-	// "fmt"
 	"time"
 	"strconv"
 	"github.com/faiface/pixel"
@@ -18,7 +17,6 @@ type MapState struct {
 
 func (state MapState) Update(game *Game) {
 	state.HandleInputs(game)
-	// fmt.Println(*state.CurrentFloor)
 	fps := 4
 	threshold := time.Second.Milliseconds() / int64(fps)
 	if time.Since(*state.LastBlinkTime).Milliseconds() >= threshold {
@@ -159,10 +157,17 @@ func (state MapState) DrawPath(game *Game) {
   for i := 0; i < len(path) - 1; i++ {
     from := path[i]
     to := path[i + 1]
-		if from.Coords.Z == *state.CurrentFloor {
+		bothSameFloor := from.Coords.Z == *state.CurrentFloor && to.Coords.Z == *state.CurrentFloor
+		anySameFloor := from.Coords.Z == *state.CurrentFloor || to.Coords.Z == *state.CurrentFloor
+		if bothSameFloor {
 			imd.Push(state.GetCenterPointOfRoom(game, from), state.GetCenterPointOfRoom(game, to))
-		} else {
-
+		} else if anySameFloor {
+			midPoint := CalculateMidPoint(state.GetCenterPointOfRoom(game, from), state.GetCenterPointOfRoom(game, to))
+			roomToUse := from
+			if to.Coords.Z == *state.CurrentFloor {
+				roomToUse = to
+			}
+			imd.Push(state.GetCenterPointOfRoom(game, roomToUse), midPoint)
 		}
   }
 
