@@ -67,6 +67,18 @@ func DrawRect(target pixel.Target, c color.Color, p1 pixel.Vec, p2 pixel.Vec) {
   imd.Draw(target)
 }
 
+func DrawCircle(target pixel.Target, c color.Color, location pixel.Vec, radius float64) {
+  imd := imdraw.New(nil)
+
+  imd.Color = c
+	imd.Push(location)
+  // Passing 0 in as the thickness fills in the circle
+  // https://github.com/faiface/pixel/blob/master/imdraw/imdraw.go#L211
+	imd.Circle(radius, 0)
+	
+  imd.Draw(target)
+}
+
 func DrawPanel(target pixel.Target, p1 pixel.Vec, p2 pixel.Vec) {
   DrawRect(target, colornames.White, pixel.V(p1.X - DIALOG_BORDER_WIDTH, p1.Y - DIALOG_BORDER_WIDTH), pixel.V(p2.X + DIALOG_BORDER_WIDTH, p2.Y + DIALOG_BORDER_WIDTH))
 	DrawRect(target, colornames.Black, p1, p2)

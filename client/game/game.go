@@ -7,6 +7,7 @@ import (
   "golang.org/x/image/colornames"
   "time"
   "net"
+  "image/color"
   // "encoding/json"
 )
 
@@ -37,6 +38,15 @@ const (
   MAP_ROOM_BLOCK_MID = MAP_ROOM_BLOCK_SIZE / 2
   MAP_HALF_CONNECTION_WIDTH = MAP_CONNECTION_WIDTH / 2
 )
+
+var (
+  // These get initialized in the init function
+  PATH_COLOR color.RGBA  
+)
+
+func init() {
+  PATH_COLOR = color.RGBA{0x29, 0x45, 0x45, 0xff}
+}
 
 func NewGame() *Game {
   game := Game{}
@@ -79,6 +89,7 @@ type Game struct {
   GameStates GameStateStack;
   TargetRoom *Room;
   PathfinderPath []*Room;
+  PathPreview PathPreview;
 }
 
 func (game *Game) Run() {
@@ -155,10 +166,32 @@ func (game *Game) InitWindow() {
 }
 
 func (game *Game) ManagePath() {
+  // TODO: Use some kind of "seeker" to determine the target room
+
   if game.TargetRoom != nil {
-    game.PathfinderPath = FindPathDijkstra(game.dungeon.Rooms, game.CurrentRoom, game.TargetRoom)
+    game.PathfinderPath = FindPathDijkstra(game.dungeon.Rooms, game.dungeon.StartingRoom, game.TargetRoom)
   } else {
     game.PathfinderPath = nil
+  }
+
+  game.PathPreview = PathPreview{}
+
+  if game.PathfinderPath != nil && len(game.PathfinderPath) > 0 {
+    for index, _ := range game.PathfinderPath {
+      room := game.PathfinderPath[index]
+      if room == game.CurrentRoom {
+        game.PathPreview.CurrentRoom = room
+        if index > 0 {
+          game.PathPreview.PreviousRoom = game.PathfinderPath[index - 1]
+        }
+        if index < len(game.PathfinderPath) - 1 {
+          game.PathPreview.NextRoom = game.PathfinderPath[index + 1]
+        }
+        if room == game.TargetRoom {
+          game.PathPreview.IsTarget = true
+        }
+      }
+    }
   }
 }
 

@@ -22,6 +22,7 @@ func (state AdventureGameState) Update(game *Game) {
 
 func (state AdventureGameState) Draw(game *Game) {
 	game.CurrentRoom.Draw(game.win)
+  game.CurrentRoom.DrawPathPreview(game.win, game.PathPreview)
   for _, player := range game.ConnectedPlayers {
     if player.CurrentRoomId == game.CurrentRoom.Id {
       player.Draw(game.win)

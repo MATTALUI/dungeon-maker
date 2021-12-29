@@ -51,7 +51,7 @@ func init() {
   // Entrance colors
   entranceColorsets = make(map[string][]color.Color)
   entranceColorsets[UP] = []color.Color{colornames.White, colornames.White, colornames.White, colornames.White}
-  entranceColorsets[DOWN] = []color.Color{colornames.Darkslategray, colornames.Gray, colornames.Gray, colornames.Darkslategray}
+  entranceColorsets[DOWN] = []color.Color{PATH_COLOR, colornames.Gray, colornames.Gray, PATH_COLOR} // []color.Color{colornames.Darkslategray, colornames.Gray, colornames.Gray, colornames.Darkslategray}
   entranceColorsets[LEFT] = []color.Color{colornames.White, colornames.White, colornames.White, colornames.White}
   entranceColorsets[RIGHT] = []color.Color{colornames.White, colornames.White, colornames.White, colornames.White}
 
@@ -318,4 +318,47 @@ func (room *Room) ToRepr() RoomRepr {
   }
 
   return repr
+}
+
+func (room *Room) DrawPathPreview(target pixel.Target, preview PathPreview) {
+  // This is pretty much always true if preview.CurrentRoom is not nil, but it'd
+  // be better to always check so that it can handle different path finding
+  // methods in the future.
+  if room == preview.CurrentRoom {
+    location := pixel.V(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+    DrawCircle(target, PATH_COLOR, location, DOOR_WIDTH / 2)
+  }
+
+  if room.HasLeftDoor() && (room.Left == preview.PreviousRoom || room.Left == preview.NextRoom) {
+    bl := pixel.V(0, (WINDOW_HEIGHT / 2) - (DOOR_WIDTH / 2))
+    tr := pixel.V((WINDOW_WIDTH / 2), (WINDOW_HEIGHT / 2) + (DOOR_WIDTH / 2))
+    DrawRect(target, PATH_COLOR, bl, tr)
+  }
+
+  if room.HasUpDoor() && (room.Up == preview.PreviousRoom || room.Up == preview.NextRoom) {
+    bl := pixel.V((WINDOW_WIDTH / 2) - (DOOR_WIDTH / 2), (WINDOW_HEIGHT / 2))
+    tr := pixel.V((WINDOW_WIDTH / 2) + (DOOR_WIDTH / 2), WINDOW_HEIGHT)
+    DrawRect(target, PATH_COLOR, bl, tr)
+  }
+
+  if room.HasRightDoor() && (room.Right == preview.PreviousRoom || room.Right == preview.NextRoom) {
+    bl := pixel.V((WINDOW_WIDTH / 2), (WINDOW_HEIGHT / 2) - DOOR_WIDTH / 2)
+    tr := pixel.V(WINDOW_WIDTH, (WINDOW_HEIGHT / 2) + DOOR_WIDTH / 2)
+    DrawRect(target, PATH_COLOR, bl, tr)
+  }
+
+  if room.HasDownDoor() && (room.Down == preview.PreviousRoom || room.Down == preview.NextRoom) {
+    bl := pixel.V((WINDOW_WIDTH / 2) - (DOOR_WIDTH / 2), 0)
+    tr := pixel.V((WINDOW_WIDTH / 2) + (DOOR_WIDTH / 2), (WINDOW_HEIGHT / 2))
+    DrawRect(target, PATH_COLOR, bl, tr)
+  }
+
+  if preview.IsTarget {
+    location := pixel.V(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+    DrawCircle(target, PATH_COLOR, location, DOOR_WIDTH)    
+  }
+
+  if room.IsFirstRoom {
+    DrawEntrance(target, room.Entrance)
+  }
 }
