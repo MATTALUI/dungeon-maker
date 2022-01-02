@@ -5,15 +5,21 @@ import (
 	"github.com/faiface/pixel/pixelgl"
 	"encoding/json"
   "time"
+  "image/color"
+  "golang.org/x/image/colornames"
+  "math"
 )
 
 type AdventureGameState struct {
-
+  HudSprites map[string]*AnimatedSprite;
 }
 
 func (state AdventureGameState) Update(game *Game) {
 	state.HandleInputs(game)
   game.hero.Update()
+  for _, sprite := range state.HudSprites {
+    sprite.NextFrame()
+  }
   for i := 0; i < len(game.ConnectedPlayers); i++ {
     game.ConnectedPlayers[i].Update()
   }
@@ -29,6 +35,7 @@ func (state AdventureGameState) Draw(game *Game) {
     }
   }
   game.hero.Draw(game.win)
+  state.DrawHud(game)
 }
 
 func (state AdventureGameState) HandleInputs(game *Game) {
@@ -155,8 +162,45 @@ func (state AdventureGameState) ManageRoomChange(game *Game) {
   }
 }
 
+func (state *AdventureGameState) DrawHud(game *Game) {
+  // Draw Hub Background
+  bl := pixel.V(0, WINDOW_HEIGHT)
+  tr := pixel.V(WINDOW_WIDTH, TOTAL_WINDOW_HEIGHT)
+  DrawRect(game.win, colornames.Black, bl, tr)
+
+  // Draw Healthbar Background
+  bl = pixel.V(TILE_SIZE * 2, TOTAL_WINDOW_HEIGHT - UI_PADDING - TILE_SIZE)
+  tr = pixel.V((TILE_SIZE * 2) + HEALTHBAR_WIDTH, TOTAL_WINDOW_HEIGHT - UI_PADDING)
+  DrawRect(game.win, colornames.Red, bl, tr)
+  // Draw Healthbar Overlays
+  barHealthLevel := 100.0
+  healthbarColors := []color.Color{ colornames.Darkgreen, colornames.Green }
+  lifeRemaining := float64(game.hero.Health)
+  for lifeRemaining > 0 {
+    colorIndex := int(lifeRemaining / barHealthLevel)
+    drawColor := healthbarColors[colorIndex]
+    drawValue := math.Min(barHealthLevel, lifeRemaining)
+    drawWidth := float64(drawValue / barHealthLevel) * float64(HEALTHBAR_WIDTH)
+    bl := pixel.V(TILE_SIZE * 2, TOTAL_WINDOW_HEIGHT - UI_PADDING - TILE_SIZE)
+    tr := pixel.V(bl.X + float64(drawWidth), TOTAL_WINDOW_HEIGHT - UI_PADDING)
+    DrawRect(game.win, drawColor, bl, tr)
+    lifeRemaining -= drawValue
+  }
+  // Draw Healthbar Sprite
+  state.HudSprites["health"].Draw(game.win, pixel.V(bl.X - TILE_SIZE, bl.Y + TILE_HALF))
+}
+
 func NewAdventureGameState() AdventureGameState {
+  sprites := make(map[string]*AnimatedSprite)
+
+  healthSprite := NewAnimatedSprite("assets/heart.png")
+  healthSprite.fps = 6
+  healthSprite.AddAnimation("beat", []int{ 1, 3, 0, 3 })
+  healthSprite.StartAnimation("beat")
+  sprites["health"] = &healthSprite
+
 	state := AdventureGameState{}
+  state.HudSprites = sprites
 
 	return state
 }

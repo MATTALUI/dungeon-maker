@@ -25,6 +25,9 @@ func NewHero() Hero {
   hero.sprite.AddAnimation(DOWN, []int{7, 3, 15, 3})
   hero.sprite.scale = 1.25
 
+  hero.MaxHealth = 200
+  hero.Health = 100
+
   return hero
 }
 
@@ -32,6 +35,8 @@ type Hero struct {
   Id string;
   location pixel.Vec;
   sprite AnimatedSprite;
+  MaxHealth int;
+  Health int;
 }
 
 func (hero *Hero) Draw(target pixel.Target) {

@@ -28,6 +28,8 @@ const (
   MAP_ROOM_BLOCK_SIZE = 32
   MAP_PADDING = 8
   MAP_CONNECTION_WIDTH = 6
+  UI_HEIGHT = 100
+  UI_PADDING = 10
 
   // DEPENDENT CONFIGS
   TILE_HALF = TILE_SIZE / 2
@@ -37,6 +39,8 @@ const (
   DIALOG_HEIGHT = WINDOW_HEIGHT / 4
   MAP_ROOM_BLOCK_MID = MAP_ROOM_BLOCK_SIZE / 2
   MAP_HALF_CONNECTION_WIDTH = MAP_CONNECTION_WIDTH / 2
+  TOTAL_WINDOW_HEIGHT = WINDOW_HEIGHT + UI_HEIGHT
+  HEALTHBAR_WIDTH = WINDOW_WIDTH / 3
 )
 
 var (
@@ -153,7 +157,7 @@ func (game *Game) LoadFromConnection() {
 func (game *Game) InitWindow() {
   cfg := pixelgl.WindowConfig{
 		Title:  GAME_NAME,
-		Bounds: pixel.R(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT),
+		Bounds: pixel.R(0, 0, WINDOW_WIDTH, TOTAL_WINDOW_HEIGHT),
     VSync: true,
 	}
 
@@ -169,7 +173,7 @@ func (game *Game) ManagePath() {
   // TODO: Use some kind of "seeker" to determine the target room
 
   if game.TargetRoom != nil {
-    game.PathfinderPath = FindPathDijkstra(game.dungeon.Rooms, game.dungeon.StartingRoom, game.TargetRoom)
+    game.PathfinderPath = FindPathDijkstra(game.dungeon.Rooms, game.CurrentRoom, game.TargetRoom)
   } else {
     game.PathfinderPath = nil
   }
