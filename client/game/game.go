@@ -63,14 +63,14 @@ func NewGame() *Game {
 		game.LoadFromConnection()
 		go AwaitMessages(&game)
 	} else {
-		game.dungeon = GenerateFlatDungeon()
+		game.dungeon = GenerateSimpleDungeon()
 	}
 
 	game.dungeon.Display()
 	game.CurrentRoom = game.dungeon.StartingRoom
-	game.hero.location = entranceStarts[game.dungeon.StartingRoom.Entrance]
-	game.hero.sprite.StartAnimation(opposites[game.dungeon.StartingRoom.Entrance])
-	game.hero.sprite.StopAnimation()
+	game.hero.Location = entranceStarts[game.dungeon.StartingRoom.Entrance]
+	game.hero.Sprite.StartAnimation(opposites[game.dungeon.StartingRoom.Entrance])
+	game.hero.Sprite.StopAnimation()
 
 	game.TargetRoom = game.dungeon.Rooms[len(game.dungeon.Rooms)-1]
 

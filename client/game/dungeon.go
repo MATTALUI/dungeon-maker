@@ -55,6 +55,22 @@ func GenerateFlatDungeon() Dungeon {
   return dungeon
 }
 
+func GenerateSimpleDungeon() Dungeon {
+  dungeon := Dungeon{}
+  dungeon.RoomRegister = make(map[string]*Room)
+
+  room := NewRoom()
+  room.IsFirstRoom = true;
+  room.Entrance = "Down"
+  dungeon.StartingRoom = &room
+  dungeon.AddRoom(&room)
+  dungeon.generateRoom()
+
+  dungeon.Rooms[len(dungeon.Rooms) - 1].AddTreasure(NewTreasureChest())
+
+  return dungeon
+}
+
 func ParseDungeonFromJSON(dungeonData string) Dungeon {
   dungeon := Dungeon{}
   dungeon.RoomRegister = make(map[string]*Room)
@@ -116,20 +132,14 @@ type DungeonRepr struct {
 }
 
 func (dungeon *Dungeon) AddRoom(room *Room) {
-  // fmt.Println("Dungeon#AddRoom")
   dungeon.Rooms = append(dungeon.Rooms, room)
   registered := false
   for !registered {
     preexistingRegistry := dungeon.RoomRegister[room.Coords.ToString()]
-    // fmt.Println("checking entry:")
-    // fmt.Println(room.Coords.ToString())
-    // fmt.Println(preexistingRegistry)
     if preexistingRegistry == nil {
-      // fmt.Println("no entry; adding it")
       dungeon.RoomRegister[room.Coords.ToString()] = room
       registered = true
     } else {
-      // fmt.Println("moving it up a level")
       room.Coords.Z++
     }
   }
@@ -145,10 +155,8 @@ func (dungeon *Dungeon) generateRoom() {
     }
   }
   newRoom := NewRoom()
-  // fmt.Println("ATTACHING " + newRoom.ToString() + " TO " + parentRoom.ToString())
   parentRoom.AttachRoomRandomly(&newRoom)
   dungeon.AddRoom(&newRoom)
-  // dungeon.Rooms = append(dungeon.Rooms, &newRoom)
 }
 
 func (dungeon *Dungeon) Display() {

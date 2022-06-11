@@ -66,6 +66,7 @@ func init() {
 func NewRoom() Room {
   room := Room{}
   room.Id = uuid.NewString()
+  room.Loot = make([]TreasureChest, 0)
 
   return room
 }
@@ -102,6 +103,7 @@ type Room struct {
 
   Dimensions Dimension;
   Coords Coordinates;
+  Loot []TreasureChest;
 }
 
 // This class is used when building a JSON version of a dungeon; it does not
@@ -285,11 +287,14 @@ func (room *Room) Draw(target pixel.Target) {
     DrawEntrance(target, room.Entrance)
   }
 
-  atlas := text.NewAtlas(basicfont.Face7x13, text.ASCII)
-  basicTxt := text.New(pixel.V(TILE_HALF, WINDOW_HEIGHT - TILE_HALF), atlas)
-  basicTxt.Color = colornames.Black
-  fmt.Fprintln(basicTxt, room.Id)
-  basicTxt.Draw(target, pixel.IM)
+  if true {
+    // Add Room UUID to screen
+    atlas := text.NewAtlas(basicfont.Face7x13, text.ASCII)
+    basicTxt := text.New(pixel.V(TILE_HALF, WINDOW_HEIGHT - TILE_HALF), atlas)
+    basicTxt.Color = colornames.Black
+    fmt.Fprintln(basicTxt, room.Id)
+    basicTxt.Draw(target, pixel.IM)
+  }
 }
 
 func (room *Room) ToRepr() RoomRepr {
@@ -360,5 +365,22 @@ func (room *Room) DrawPathPreview(target pixel.Target, preview PathPreview) {
 
   if room.IsFirstRoom {
     DrawEntrance(target, room.Entrance)
+  }
+}
+
+func (room *Room) DrawObjects( target pixel.Target) {
+  for _, chest := range room.Loot {
+    chest.Draw(target)
+  }
+}
+
+func (room *Room) AddTreasure(chest TreasureChest) {
+  room.Loot = append(room.Loot, chest)
+}
+
+func (room *Room) Update() {
+  for i, _ := range room.Loot {
+    loot := &room.Loot[i]
+    loot.Update()
   }
 }

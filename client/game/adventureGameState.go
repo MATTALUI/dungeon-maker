@@ -24,12 +24,14 @@ func (state AdventureGameState) Update(game *Game) {
 	for i := 0; i < len(game.ConnectedPlayers); i++ {
 		game.ConnectedPlayers[i].Update()
 	}
+	game.CurrentRoom.Update()
 	state.ManageRoomChange(game)
 }
 
 func (state AdventureGameState) Draw(game *Game) {
 	game.CurrentRoom.Draw(game.win)
 	game.CurrentRoom.DrawPathPreview(game.win, game.PathPreview)
+	game.CurrentRoom.DrawObjects(game.win)
 	for _, player := range game.ConnectedPlayers {
 		if player.CurrentRoomId == game.CurrentRoom.Id {
 			player.Draw(game.win)
@@ -46,42 +48,42 @@ func (state AdventureGameState) HandleInputs(game *Game) {
 		game.GameStates.Push(NewPauseMenuState())
 	}
 	if game.win.JustPressed(pixelgl.KeyLeft) || game.win.JustPressed(pixelgl.KeyA) {
-		game.hero.sprite.StartAnimation(LEFT)
+		game.hero.Sprite.StartAnimation(LEFT)
 	}
 	if game.win.JustPressed(pixelgl.KeyRight) || game.win.JustPressed(pixelgl.KeyD) {
-		game.hero.sprite.StartAnimation(RIGHT)
+		game.hero.Sprite.StartAnimation(RIGHT)
 	}
 	if game.win.JustPressed(pixelgl.KeyDown) || game.win.JustPressed(pixelgl.KeyS) {
-		game.hero.sprite.StartAnimation(DOWN)
+		game.hero.Sprite.StartAnimation(DOWN)
 	}
 	if game.win.JustPressed(pixelgl.KeyUp) || game.win.JustPressed(pixelgl.KeyW) {
-		game.hero.sprite.StartAnimation(UP)
+		game.hero.Sprite.StartAnimation(UP)
 	}
 
 	// HELD KEY CONTROLS
 	if game.win.Pressed(pixelgl.KeyLeft) || game.win.Pressed(pixelgl.KeyA) {
-		targetLocation := pixel.V(game.hero.location.X-HERO_SPEED, game.hero.location.Y)
+		targetLocation := pixel.V(game.hero.Location.X-HERO_SPEED, game.hero.Location.Y)
 		if state.CheckHeroMovement(game, targetLocation) {
 			game.hero.Left()
 			heroMoved = true
 		}
 	}
 	if game.win.Pressed(pixelgl.KeyRight) || game.win.Pressed(pixelgl.KeyD) {
-		targetLocation := pixel.V(game.hero.location.X+HERO_SPEED, game.hero.location.Y)
+		targetLocation := pixel.V(game.hero.Location.X+HERO_SPEED, game.hero.Location.Y)
 		if state.CheckHeroMovement(game, targetLocation) {
 			game.hero.Right()
 			heroMoved = true
 		}
 	}
 	if game.win.Pressed(pixelgl.KeyDown) || game.win.Pressed(pixelgl.KeyS) {
-		targetLocation := pixel.V(game.hero.location.X, game.hero.location.Y-HERO_SPEED)
+		targetLocation := pixel.V(game.hero.Location.X, game.hero.Location.Y-HERO_SPEED)
 		if state.CheckHeroMovement(game, targetLocation) {
 			game.hero.Down()
 			heroMoved = true
 		}
 	}
 	if game.win.Pressed(pixelgl.KeyUp) || game.win.Pressed(pixelgl.KeyW) {
-		targetLocation := pixel.V(game.hero.location.X, game.hero.location.Y+HERO_SPEED)
+		targetLocation := pixel.V(game.hero.Location.X, game.hero.Location.Y+HERO_SPEED)
 		if state.CheckHeroMovement(game, targetLocation) {
 			game.hero.Up()
 			heroMoved = true
@@ -90,16 +92,16 @@ func (state AdventureGameState) HandleInputs(game *Game) {
 
 	// RELEASED CONROLS
 	if game.win.JustReleased(pixelgl.KeyLeft) || game.win.JustReleased(pixelgl.KeyA) {
-		game.hero.sprite.StopAnimation()
+		game.hero.Sprite.StopAnimation()
 	}
 	if game.win.JustReleased(pixelgl.KeyRight) || game.win.JustReleased(pixelgl.KeyD) {
-		game.hero.sprite.StopAnimation()
+		game.hero.Sprite.StopAnimation()
 	}
 	if game.win.JustReleased(pixelgl.KeyDown) || game.win.JustReleased(pixelgl.KeyS) {
-		game.hero.sprite.StopAnimation()
+		game.hero.Sprite.StopAnimation()
 	}
 	if game.win.JustReleased(pixelgl.KeyUp) || game.win.JustReleased(pixelgl.KeyW) {
-		game.hero.sprite.StopAnimation()
+		game.hero.Sprite.StopAnimation()
 	}
 
 	if heroMoved && game.Conn != nil {
@@ -133,25 +135,25 @@ func (state AdventureGameState) CheckHeroMovement(game *Game, targetLocation pix
 
 func (state AdventureGameState) ManageRoomChange(game *Game) {
 	roomChanged := false
-	if game.hero.location.X < -TILE_SIZE { // Moved left
-		game.hero.location.X = WINDOW_WIDTH + TILE_SIZE
+	if game.hero.Location.X < -TILE_SIZE { // Moved left
+		game.hero.Location.X = WINDOW_WIDTH + TILE_SIZE
 		game.CurrentRoom = game.CurrentRoom.Left
 		roomChanged = true
-	} else if game.hero.location.X > WINDOW_WIDTH+TILE_SIZE { // Moved right
-		game.hero.location.X = -TILE_SIZE
+	} else if game.hero.Location.X > WINDOW_WIDTH+TILE_SIZE { // Moved right
+		game.hero.Location.X = -TILE_SIZE
 		game.CurrentRoom = game.CurrentRoom.Right
 		roomChanged = true
-	} else if game.hero.location.Y > WINDOW_HEIGHT+TILE_SIZE { // Moved up
-		game.hero.location.Y = -TILE_SIZE
+	} else if game.hero.Location.Y > WINDOW_HEIGHT+TILE_SIZE { // Moved up
+		game.hero.Location.Y = -TILE_SIZE
 		game.CurrentRoom = game.CurrentRoom.Up
 		roomChanged = true
-	} else if game.hero.location.Y < -TILE_SIZE { // Moved down
-		game.hero.location.Y = WINDOW_HEIGHT + TILE_SIZE
+	} else if game.hero.Location.Y < -TILE_SIZE { // Moved down
+		game.hero.Location.Y = WINDOW_HEIGHT + TILE_SIZE
 		game.CurrentRoom = game.CurrentRoom.Down
 		roomChanged = true
 	}
 
-	if roomChanged && game.CurrentRoom.Id[0] == '0' {
+	if roomChanged && game.CurrentRoom.Id[0] == '6' && game.CurrentRoom.Id[1] == '9' {
 		// NOTE: This doesn't really affect anything in the game I just want to test dynamically adding states
 		go func() {
 			time.Sleep(time.Second)

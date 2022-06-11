@@ -23,7 +23,7 @@ func init() {
 	ghostAnimation = NewAnimatedSprite("assets/ghost.png")
 	ghostAnimation.fps = 6
 	ghostAnimation.AddAnimation(LEFT, []int{0, 2, 4, 6})
-  ghostAnimation.AddAnimation(RIGHT, []int{1, 3, 5, 7 })
+  	ghostAnimation.AddAnimation(RIGHT, []int{1, 3, 5, 7 })
 	ghostAnimation.StartAnimation(LEFT)
 }
 
@@ -50,8 +50,8 @@ func NewConnectedPlayer() ConnectedPlayer {
 func NewConnectedPlayerFromHero(hero *Hero) ConnectedPlayer {
 	player := ConnectedPlayer{
 		Id: hero.Id,
-		Location: hero.location,
-		Orientation: hero.sprite.currentAnimation,
+		Location: hero.Location,
+		Orientation: hero.Sprite.currentAnimation,
 	}
 	if len(player.Orientation) == 0 {
 		player.Orientation = UP
