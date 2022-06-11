@@ -21,6 +21,7 @@ func init() {
   on("connect", HandleConnect)
   on("player-join", HandlePlayerJoin)
   on("player-move", HandlePlayerMove)
+  on("player-disconnect", HandlePlayerLeave)
 }
 
 func on(event string, handler func(*Game, SocketMessage)) {
@@ -124,4 +125,18 @@ func HandlePlayerMove(game *Game, message SocketMessage) {
       break
     }
   }
+}
+
+func HandlePlayerLeave(game *Game, message SocketMessage) {
+  leavingPlayer := ConnectedPlayer{}
+  json.Unmarshal([]byte(message.JSONData), &leavingPlayer)
+
+  remainingPlayers := make([]ConnectedPlayer, 0)
+  for _, connectedPlayer := range game.ConnectedPlayers {
+    if connectedPlayer.Id != leavingPlayer.Id {
+      remainingPlayers = append(remainingPlayers, connectedPlayer)
+    }
+  }
+
+  game.ConnectedPlayers = remainingPlayers
 }

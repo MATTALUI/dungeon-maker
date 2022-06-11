@@ -31,13 +31,22 @@ func on(event string, handler func(net.Conn, SocketMessage)) {
 
 func HandleDisconnect(conn net.Conn) {
 	remaining := make([]game.ConnectedPlayer, 0)
+  var disconnectingPlayer game.ConnectedPlayer
 	for _, player := range players {
 		if player.Conn != conn {
 			remaining = append(remaining, player)
-		}
+		} else {
+      disconnectingPlayer = player
+    }
 	}
 
 	players = remaining
+  response, _ := json.Marshal(disconnectingPlayer)
+
+  BroadcastSocketMessage(SocketMessage{
+    Event: "player-disconnect",
+    JSONData: string(response),
+  })
 }
 
 func HandleRawMessage(conn net.Conn, rawMessage string) {
