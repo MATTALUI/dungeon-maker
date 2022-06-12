@@ -9,6 +9,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"golang.org/x/image/colornames"
+	"math/rand"
 	// "encoding/json"
 )
 
@@ -63,9 +64,12 @@ func NewGame() *Game {
 		game.LoadFromConnection()
 		go AwaitMessages(&game)
 	} else {
-		game.dungeon = GenerateSimpleDungeon()
+		game.dungeon = GenerateFlatDungeon()
+		game.SetNewTarget()
+		// game.ManagePath()
 	}
 
+	game.TargetRoom.AddTreasure(NewTreasureChest())
 	game.dungeon.Display()
 	game.CurrentRoom = game.dungeon.StartingRoom
 	game.hero.Location = entranceStarts[game.dungeon.StartingRoom.Entrance]
@@ -118,7 +122,7 @@ func (game *Game) Run() {
 		default:
 		}
 
-		game.ManagePath()
+		// game.ManagePath()
 		game.GameStates.CurrentState().Update(game)
 		for _, state := range game.GameStates.States {
 			state.Draw(game)
@@ -201,4 +205,9 @@ func (game *Game) ManagePath() {
 
 func (game *Game) HasPath() bool {
 	return game.TargetRoom != nil && game.PathfinderPath != nil && len(game.PathfinderPath) > 0
+}
+
+func (game *Game) SetNewTarget() {
+	newIndex := rand.Intn(len(game.dungeon.Rooms))
+	game.TargetRoom = game.dungeon.Rooms[newIndex]
 }

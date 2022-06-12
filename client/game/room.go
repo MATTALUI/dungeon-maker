@@ -378,6 +378,17 @@ func (room *Room) AddTreasure(chest TreasureChest) {
   room.Loot = append(room.Loot, chest)
 }
 
+func (room *Room) RemoveTreasure(chest TreasureChest) {
+  newLoot := make([]TreasureChest, 0)
+  for _, loot := range room.Loot {
+    if loot.Id != chest.Id {
+      newLoot = append(newLoot, loot)
+    }
+  }
+
+  room.Loot = newLoot
+}
+
 func (room *Room) Update() {
   for i, _ := range room.Loot {
     loot := &room.Loot[i]

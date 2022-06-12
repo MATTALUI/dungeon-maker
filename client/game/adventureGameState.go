@@ -9,6 +9,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"golang.org/x/image/colornames"
+	"strconv"
 )
 
 type AdventureGameState struct {
@@ -25,6 +26,17 @@ func (state AdventureGameState) Update(game *Game) {
 		game.ConnectedPlayers[i].Update()
 	}
 	game.CurrentRoom.Update()
+
+	// Check for collisions
+	for _, treasure := range game.CurrentRoom.Loot {
+		if CheckCollision(game.hero.Collider, game.hero.Location, treasure.Collider, treasure.Location) {
+			game.CurrentRoom.RemoveTreasure(treasure)
+			game.SetNewTarget()
+			game.TargetRoom.AddTreasure(NewTreasureChest())
+			game.GameStates.Push(NewDialogState("+" + strconv.Itoa(treasure.PointValue) + " Gold!"))
+		}
+	}
+
 	state.ManageRoomChange(game)
 }
 

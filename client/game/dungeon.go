@@ -66,8 +66,6 @@ func GenerateSimpleDungeon() Dungeon {
   dungeon.AddRoom(&room)
   dungeon.generateRoom()
 
-  dungeon.Rooms[len(dungeon.Rooms) - 1].AddTreasure(NewTreasureChest())
-
   return dungeon
 }
 

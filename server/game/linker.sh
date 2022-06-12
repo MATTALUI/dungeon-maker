@@ -29,4 +29,5 @@ ln -s ../../client/game/mapState.go ./mapState.go
 ln -s ../../client/game/dijkstra.go ./dijkstra.go
 ln -s ../../client/game/pathPreview.go ./pathPreview.go
 ln -s ../../client/game/treasure.go ./treasure.go
+ln -s ../../client/game/collider.go ./collider.go
 echo "The deed is done"

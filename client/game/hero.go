@@ -28,6 +28,8 @@ func NewHero() Hero {
 	hero.MaxHealth = 200
 	hero.Health = 100
 
+	hero.Collider = NewRectCollider(20, 40)
+
 	return hero
 }
 
@@ -37,9 +39,13 @@ type Hero struct {
 	Sprite    AnimatedSprite
 	MaxHealth int
 	Health    int
+	Collider Collider
 }
 
 func (hero *Hero) Draw(target pixel.Target) {
+	if false {
+		hero.Collider.Draw(target, hero.Location)
+	}
 	hero.Sprite.Draw(target, hero.Location)
 }
 
