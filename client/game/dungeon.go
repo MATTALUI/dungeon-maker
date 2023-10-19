@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	MAX_ROOMS = 69
-	MIN_ROOMS = 25
+	MAX_ROOMS = 6 //69
+	MIN_ROOMS = 5 //25
 )
 
 func init() {

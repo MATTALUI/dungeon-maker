@@ -67,6 +67,19 @@ func DrawRect(target pixel.Target, c color.Color, p1 pixel.Vec, p2 pixel.Vec) {
 	imd.Draw(target)
 }
 
+func DrawRectOutline(target pixel.Target, c color.Color, p1 pixel.Vec, p2 pixel.Vec) {
+	imd := imdraw.New(nil)
+
+	imd.Color = c
+	imd.Push(p1)
+	imd.Push(pixel.V(p1.X, p2.Y))
+	imd.Push(p2)
+	imd.Push(pixel.V(p2.X, p1.Y))
+	imd.Polygon(1)
+
+	imd.Draw(target)
+}
+
 func DrawCircle(target pixel.Target, c color.Color, location pixel.Vec, radius float64) {
 	imd := imdraw.New(nil)
 

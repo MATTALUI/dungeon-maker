@@ -3,7 +3,7 @@ package game
 import (
 	// "fmt"
 	"github.com/faiface/pixel"
-	"golang.org/x/image/colornames"
+	"image/color"
 )
 
 const (
@@ -11,24 +11,30 @@ const (
 	COLLIDER_RECT   = "RECT"
 )
 
-func NewCircleCollider(r float64) Collider {
+func NewCircleCollider(x float64, y float64, r float64) Collider {
 	col := Collider{}
 	col.Type = COLLIDER_CIRCLE
 	col.Radius = r
+	col.Position.X = x
+	col.Position.Y = y
 
 	return col
 }
 
-func NewRectCollider(w float64, h float64) Collider {
+func NewRectCollider(x float64, y float64, w float64, h float64) Collider {
 	col := Collider{}
 	col.Type = COLLIDER_RECT
 	col.Width = w
 	col.Height = h
+	col.Position.X = x
+	col.Position.Y = y
 
 	return col
 }
 
-func CheckCollision(c1 Collider, c1loc pixel.Vec, c2 Collider, c2loc pixel.Vec) bool {
+func CheckCollision(c1 Collider, c2 Collider) bool {
+	c1loc := c1.Position
+	c2loc := c2.Position
 	if c1.Type == COLLIDER_CIRCLE && c2.Type == COLLIDER_CIRCLE {
 		// Circle on circle collisions
 	} else if c1.Type == COLLIDER_RECT && c2.Type == COLLIDER_RECT {
@@ -52,20 +58,22 @@ func CheckCollision(c1 Collider, c1loc pixel.Vec, c2 Collider, c2loc pixel.Vec) 
 }
 
 type Collider struct {
-	Type   string
-	Height float64
-	Width  float64
-	Radius float64
+	Type     string
+	Height   float64
+	Width    float64
+	Radius   float64
+	Position pixel.Vec
 }
 
-func (col *Collider) Draw(target pixel.Target, location pixel.Vec) {
+func (col *Collider) Draw(target pixel.Target) {
 	switch col.Type {
 	case COLLIDER_RECT:
 		halfWidth := col.Width / 2.0
 		halfHeight := col.Height / 2.0
-		tl := pixel.V(location.X-halfWidth, location.Y-halfHeight)
-		br := pixel.V(location.X+halfWidth, location.Y+halfHeight)
-		DrawRect(target, colornames.Green, tl, br)
+		tl := pixel.V(col.Position.X-halfWidth, col.Position.Y-halfHeight)
+		br := pixel.V(col.Position.X+halfWidth, col.Position.Y+halfHeight)
+		color := color.RGBA{R: 0, G: 169, B: 69, A: 69}
+		DrawRectOutline(target, color, tl, br)
 	case COLLIDER_CIRCLE:
 	}
 

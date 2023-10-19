@@ -115,10 +115,10 @@ type RoomRepr struct {
 	Dimensions  Dimension   `json:"dimensions"`
 	Coords      Coordinates `json:"coordinates"`
 
-	Up    string `json:up`
-	Down  string `json:down`
-	Left  string `json:left`
-	Right string `json:right`
+	Up    string `json:"up"`
+	Down  string `json:"down"`
+	Left  string `json:"left"`
+	Right string `json:"right"`
 }
 
 func (room *Room) AttachRoomRandomly(attachedRoom *Room) bool {
@@ -287,13 +287,17 @@ func (room *Room) Draw(target pixel.Target) {
 		DrawEntrance(target, room.Entrance)
 	}
 
-	if true {
+	if DEBUG {
 		// Add Room UUID to screen
 		atlas := text.NewAtlas(basicfont.Face7x13, text.ASCII)
 		basicTxt := text.New(pixel.V(TILE_HALF, WINDOW_HEIGHT-TILE_HALF), atlas)
 		basicTxt.Color = colornames.Black
 		fmt.Fprintln(basicTxt, room.Id)
 		basicTxt.Draw(target, pixel.IM)
+		// Render Collisions in the room
+		for _, collider := range room.CalcColliders() {
+			collider.Draw(target)
+		}
 	}
 }
 
@@ -372,6 +376,11 @@ func (room *Room) DrawObjects(target pixel.Target) {
 	for _, chest := range room.Loot {
 		chest.Draw(target)
 	}
+}
+
+func (room *Room) CalcColliders() []Collider {
+	colliders := make([]Collider, 0)
+	return colliders
 }
 
 func (room *Room) AddTreasure(chest TreasureChest) {

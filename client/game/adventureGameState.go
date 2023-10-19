@@ -29,7 +29,7 @@ func (state AdventureGameState) Update(game *Game) {
 
 	// Check for collisions
 	for _, treasure := range game.CurrentRoom.Loot {
-		if CheckCollision(game.hero.Collider, game.hero.Location, treasure.Collider, treasure.Location) {
+		if CheckCollision(game.hero.Collider, treasure.Collider) {
 			game.CurrentRoom.RemoveTreasure(treasure)
 			game.SetNewTarget()
 			game.TargetRoom.AddTreasure(NewTreasureChest())

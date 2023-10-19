@@ -38,7 +38,7 @@ func NewTreasureChest() TreasureChest {
 
 	chest.PointValue = rand.Intn(100)
 
-	chest.Collider = NewRectCollider(50, 50)
+	chest.Collider = NewRectCollider(chest.Location.X, chest.Location.Y, 50, 50)
 
 	return chest
 }
@@ -56,8 +56,8 @@ func (chest *TreasureChest) Update() {
 }
 
 func (chest *TreasureChest) Draw(target pixel.Target) {
-	if false {
-		chest.Collider.Draw(target, chest.Location)
+	if DEBUG {
+		chest.Collider.Draw(target)
 	}
 	chest.Sprite.Draw(target, chest.Location)
 }

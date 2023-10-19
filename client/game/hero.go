@@ -6,7 +6,8 @@ import (
 )
 
 const (
-	HERO_SPEED = 5
+	HERO_SPEED           = 5
+	HERO_COLLIDER_OFFSET = 5
 )
 
 func NewHero() Hero {
@@ -28,7 +29,7 @@ func NewHero() Hero {
 	hero.MaxHealth = 200
 	hero.Health = 100
 
-	hero.Collider = NewRectCollider(20, 40)
+	hero.Collider = NewRectCollider(hero.Location.X, hero.Location.Y-HERO_COLLIDER_OFFSET, 20, 30)
 
 	return hero
 }
@@ -43,13 +44,14 @@ type Hero struct {
 }
 
 func (hero *Hero) Draw(target pixel.Target) {
-	if false {
-		hero.Collider.Draw(target, hero.Location)
+	if DEBUG {
+		hero.Collider.Draw(target)
 	}
 	hero.Sprite.Draw(target, hero.Location)
 }
 
 func (hero *Hero) Update() {
+	hero.UpdateColliderPosition()
 	hero.Sprite.NextFrame()
 }
 
@@ -67,4 +69,9 @@ func (hero *Hero) Down() {
 
 func (hero *Hero) Up() {
 	hero.Location.Y += HERO_SPEED
+}
+
+func (hero *Hero) UpdateColliderPosition() {
+	hero.Collider.Position.X = hero.Location.X
+	hero.Collider.Position.Y = hero.Location.Y - HERO_COLLIDER_OFFSET
 }

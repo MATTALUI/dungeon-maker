@@ -15,6 +15,7 @@ import (
 
 const (
 	// RAW CONFIGS
+	DEBUG                = true
 	TILE_SIZE            = 32
 	WINDOW_WIDTH         = 900
 	WINDOW_HEIGHT        = 700
@@ -122,7 +123,7 @@ func (game *Game) Run() {
 		default:
 		}
 
-		// game.ManagePath()
+		game.ManagePath()
 		game.GameStates.CurrentState().Update(game)
 		for _, state := range game.GameStates.States {
 			state.Draw(game)
