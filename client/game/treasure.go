@@ -1,12 +1,13 @@
 package game
 
 import (
+	"errors"
 	"github.com/faiface/pixel"
 	"github.com/google/uuid"
 	"math/rand"
 	"os"
-	"errors"
 )
+
 var (
 	chestAnimation AnimatedSprite
 )
@@ -20,7 +21,7 @@ func init() {
 	}
 	chestAnimation = NewAnimatedSprite("assets/chest.png")
 	chestAnimation.fps = 7
-	chestAnimation.AddAnimation("GLOW", []int{ 1, 3, 0, 2, 0, 3, 1, 1 })
+	chestAnimation.AddAnimation("GLOW", []int{1, 3, 0, 2, 0, 3, 1, 1})
 	chestAnimation.StartAnimation("GLOW")
 }
 
@@ -31,7 +32,7 @@ func NewTreasureChest() TreasureChest {
 	animationCopy := chestAnimation
 	chest.Sprite = animationCopy
 	chest.Sprite.scale = 2
-	
+
 	chest.Location.X = WINDOW_WIDTH / 2
 	chest.Location.Y = WINDOW_HEIGHT / 2
 

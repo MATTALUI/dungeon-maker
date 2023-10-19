@@ -8,7 +8,7 @@ import (
 
 const (
 	COLLIDER_CIRCLE = "CIRCLE"
-	COLLIDER_RECT = "RECT"
+	COLLIDER_RECT   = "RECT"
 )
 
 func NewCircleCollider(r float64) Collider {
@@ -35,11 +35,11 @@ func CheckCollision(c1 Collider, c1loc pixel.Vec, c2 Collider, c2loc pixel.Vec) 
 		// Rect on rect collision
 		c1HalfWidth := c1.Width / 2.0
 		c1HalfHeight := c1.Height / 2.0
-		tl1 := pixel.V(c1loc.X - c1HalfWidth, c1loc.Y - c1HalfHeight)
+		tl1 := pixel.V(c1loc.X-c1HalfWidth, c1loc.Y-c1HalfHeight)
 
 		c2HalfWidth := c2.Width / 2.0
 		c2HalfHeight := c2.Height / 2.0
-		tl2 := pixel.V(c2loc.X - c2HalfWidth, c2loc.Y - c2HalfHeight)
+		tl2 := pixel.V(c2loc.X-c2HalfWidth, c2loc.Y-c2HalfHeight)
 		withinXRange := ((tl1.X + c1.Width) >= tl2.X) && ((tl2.X + c2.Width) >= tl1.X)
 		withinYRange := ((tl1.Y + c1.Height) >= tl2.Y) && ((tl2.Y + c2.Height) >= tl1.Y)
 
@@ -52,10 +52,10 @@ func CheckCollision(c1 Collider, c1loc pixel.Vec, c2 Collider, c2loc pixel.Vec) 
 }
 
 type Collider struct {
-	Type string;
-	Height float64;
-	Width float64;
-	Radius float64;
+	Type   string
+	Height float64
+	Width  float64
+	Radius float64
 }
 
 func (col *Collider) Draw(target pixel.Target, location pixel.Vec) {
@@ -63,8 +63,8 @@ func (col *Collider) Draw(target pixel.Target, location pixel.Vec) {
 	case COLLIDER_RECT:
 		halfWidth := col.Width / 2.0
 		halfHeight := col.Height / 2.0
-		tl := pixel.V(location.X - halfWidth, location.Y - halfHeight)
-		br := pixel.V(location.X + halfWidth, location.Y + halfHeight)
+		tl := pixel.V(location.X-halfWidth, location.Y-halfHeight)
+		br := pixel.V(location.X+halfWidth, location.Y+halfHeight)
 		DrawRect(target, colornames.Green, tl, br)
 	case COLLIDER_CIRCLE:
 	}

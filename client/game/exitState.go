@@ -2,7 +2,7 @@ package game
 
 import "os"
 
-type ExitState struct {}
+type ExitState struct{}
 
 func (state ExitState) Update(game *Game) {
 	// This state just exits. This means we can schedule an exit as part of the
@@ -12,7 +12,7 @@ func (state ExitState) Update(game *Game) {
 }
 
 func (state ExitState) Draw(game *Game) {
-	
+
 }
 
 func NewExitState() ExitState {

@@ -1,12 +1,12 @@
 package game
 
 import (
-  "github.com/faiface/pixel"
-	"github.com/google/uuid"
 	"encoding/json"
+	"errors"
+	"github.com/faiface/pixel"
+	"github.com/google/uuid"
 	"net"
 	"os"
-	"errors"
 )
 
 var (
@@ -23,23 +23,23 @@ func init() {
 	ghostAnimation = NewAnimatedSprite("assets/ghost.png")
 	ghostAnimation.fps = 6
 	ghostAnimation.AddAnimation(LEFT, []int{0, 2, 4, 6})
-  	ghostAnimation.AddAnimation(RIGHT, []int{1, 3, 5, 7 })
+	ghostAnimation.AddAnimation(RIGHT, []int{1, 3, 5, 7})
 	ghostAnimation.StartAnimation(LEFT)
 }
 
 type ConnectedPlayer struct {
-	Id string `json:"id"`
-	Location pixel.Vec `json:"location"`;
-	Orientation string `json:"orientation"`;
-	CurrentRoomId string `json:"currentRoomId"`;
-	Conn net.Conn `json:"-"`;
-	Sprite AnimatedSprite `json:"-"`;
+	Id            string         `json:"id"`
+	Location      pixel.Vec      `json:"location"`
+	Orientation   string         `json:"orientation"`
+	CurrentRoomId string         `json:"currentRoomId"`
+	Conn          net.Conn       `json:"-"`
+	Sprite        AnimatedSprite `json:"-"`
 }
 
 func NewConnectedPlayer() ConnectedPlayer {
 	player := ConnectedPlayer{
-		Id: uuid.NewString(),
-		Location: pixel.V(0,0),
+		Id:          uuid.NewString(),
+		Location:    pixel.V(0, 0),
 		Orientation: UP,
 	}
 	player.SetAnimation()
@@ -49,8 +49,8 @@ func NewConnectedPlayer() ConnectedPlayer {
 
 func NewConnectedPlayerFromHero(hero *Hero) ConnectedPlayer {
 	player := ConnectedPlayer{
-		Id: hero.Id,
-		Location: hero.Location,
+		Id:          hero.Id,
+		Location:    hero.Location,
 		Orientation: hero.Sprite.currentAnimation,
 	}
 	if len(player.Orientation) == 0 {

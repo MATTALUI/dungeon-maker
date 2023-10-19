@@ -6,13 +6,13 @@ import (
 )
 
 type MenuOption struct {
-	DisplayName string;
-	Handler func(*Game)
+	DisplayName string
+	Handler     func(*Game)
 }
 
 type MenuState struct {
-	CurrentSelection *int;
-	MenuOptions []MenuOption;
+	CurrentSelection *int
+	MenuOptions      []MenuOption
 }
 
 func (state MenuState) Update(game *Game) {
@@ -22,25 +22,23 @@ func (state MenuState) Update(game *Game) {
 func (state MenuState) Draw(game *Game) {
 	menuWidth := float64((DIALOG_PADDING * 2) + (state.GetLongestOptionSize() * DIALOG_TEXT_WIDTH) + (DIALOG_TEXT_WIDTH * 2))
 	menuHeight := float64((DIALOG_PADDING * 2) + ((DIALOG_TEXT_HEIGHT + DIALOG_TEXT_GAP) * len(state.MenuOptions)))
-	bottomLeft := pixel.V(INSET_SIZE, WINDOW_HEIGHT - INSET_SIZE - menuHeight)
-  topRight := pixel.V(bottomLeft.X + menuWidth, WINDOW_HEIGHT - INSET_SIZE)
+	bottomLeft := pixel.V(INSET_SIZE, WINDOW_HEIGHT-INSET_SIZE-menuHeight)
+	topRight := pixel.V(bottomLeft.X+menuWidth, WINDOW_HEIGHT-INSET_SIZE)
 	selectorX := bottomLeft.X + DIALOG_PADDING
 	dialogX := bottomLeft.X + DIALOG_PADDING + DIALOG_TEXT_HEIGHT + (DIALOG_TEXT_GAP / 2)
 	DrawPanel(game.win, bottomLeft, topRight)
 
-	for index, option := range state.MenuOptions {		
+	for index, option := range state.MenuOptions {
 		offset := index * (DIALOG_TEXT_GAP + DIALOG_TEXT_HEIGHT)
-		textLocation := pixel.V(dialogX, topRight.Y - float64(DIALOG_TEXT_HEIGHT)- float64(DIALOG_PADDING) - float64(offset))
+		textLocation := pixel.V(dialogX, topRight.Y-float64(DIALOG_TEXT_HEIGHT)-float64(DIALOG_PADDING)-float64(offset))
 		if option.Handler == nil {
 			DrawStrikethroughText(game.win, option.DisplayName, textLocation, pixel.IM.Scaled(textLocation, 2.0))
 		} else {
 			DrawText(game.win, option.DisplayName, textLocation, pixel.IM.Scaled(textLocation, 2.0))
 		}
-		
-		
 
 		if index == *state.CurrentSelection {
-			bottomLeft := pixel.V(selectorX, topRight.Y - float64(DIALOG_TEXT_HEIGHT)- float64(DIALOG_PADDING) - float64(offset))
+			bottomLeft := pixel.V(selectorX, topRight.Y-float64(DIALOG_TEXT_HEIGHT)-float64(DIALOG_PADDING)-float64(offset))
 			DrawMenuArrow(game.win, bottomLeft)
 		}
 	}
@@ -48,27 +46,27 @@ func (state MenuState) Draw(game *Game) {
 
 func (state MenuState) HandleInputs(game *Game) {
 	if game.win.JustPressed(pixelgl.KeyEscape) {
-    game.GameStates.Pop()
-  }
+		game.GameStates.Pop()
+	}
 	if game.win.JustPressed(pixelgl.KeyDown) || game.win.JustPressed(pixelgl.KeyS) {
-    *state.CurrentSelection++
+		*state.CurrentSelection++
 
 		if len(state.MenuOptions) == *state.CurrentSelection {
 			*state.CurrentSelection = 0
 		}
-  }
-  if game.win.JustPressed(pixelgl.KeyUp) || game.win.JustPressed(pixelgl.KeyW) {
-    *state.CurrentSelection--
+	}
+	if game.win.JustPressed(pixelgl.KeyUp) || game.win.JustPressed(pixelgl.KeyW) {
+		*state.CurrentSelection--
 
 		if *state.CurrentSelection < 0 {
 			*state.CurrentSelection = len(state.MenuOptions) - 1
 		}
-  }
+	}
 	if game.win.JustPressed(pixelgl.KeyEnter) {
 		selectedIndex := *state.CurrentSelection
 		selectedHandler := state.MenuOptions[selectedIndex].Handler
 		if selectedHandler != nil {
-			selectedHandler(game)	
+			selectedHandler(game)
 		}
 	}
 }
@@ -111,12 +109,12 @@ func NewPauseMenuState() MenuState {
 	htpOption := MenuOption{
 		DisplayName: "How to Play",
 	}
-	htpOption.Handler = func (game *Game) {
+	htpOption.Handler = func(game *Game) {
 		game.GameStates.Pop()
 		game.GameStates.Push(NewDialogState("ESC - Open Play Menu And Close Menus \n WASD/ARROWS - Move Hero"))
 	}
 	state.MenuOptions = append(state.MenuOptions, htpOption)
-	
+
 	// "Options" Option
 	optionsOption := MenuOption{
 		DisplayName: "Options",
@@ -127,7 +125,7 @@ func NewPauseMenuState() MenuState {
 	closeOption := MenuOption{
 		DisplayName: "Close Menu",
 	}
-	closeOption.Handler = func (game *Game) {
+	closeOption.Handler = func(game *Game) {
 		game.GameStates.Pop()
 	}
 	state.MenuOptions = append(state.MenuOptions, closeOption)
@@ -136,7 +134,7 @@ func NewPauseMenuState() MenuState {
 	quitOption := MenuOption{
 		DisplayName: "Quit Game",
 	}
-	quitOption.Handler = func (game *Game) {
+	quitOption.Handler = func(game *Game) {
 		game.GameStates.Pop()
 		game.GameStates.Push(NewExitState())
 		game.GameStates.Push(NewDialogState("Goodbye!"))

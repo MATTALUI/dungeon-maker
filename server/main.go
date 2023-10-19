@@ -1,10 +1,10 @@
 package main
 
 import (
+	"bufio"
+	"dungeon-maker-server/game"
 	"fmt"
 	"net"
-  "bufio"
-	"dungeon-maker-server/game"
 )
 
 var (
@@ -39,7 +39,7 @@ func main() {
 		fmt.Println("Client connected.")
 
 		fmt.Println("Client " + c.RemoteAddr().String() + " connected.")
-    // connections = append(connections, c)
+		// connections = append(connections, c)
 		go AwaitMessages(c)
 	}
 }

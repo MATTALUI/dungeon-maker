@@ -39,7 +39,7 @@ type Hero struct {
 	Sprite    AnimatedSprite
 	MaxHealth int
 	Health    int
-	Collider Collider
+	Collider  Collider
 }
 
 func (hero *Hero) Draw(target pixel.Target) {

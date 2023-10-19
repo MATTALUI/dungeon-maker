@@ -1,15 +1,15 @@
 package game
 
 import (
-	"strings"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
+	"strings"
 )
 
 type DialogState struct {
-	CurrentPage *int;
-	Message string;
-	Pages [][]string;
+	CurrentPage *int
+	Message     string
+	Pages       [][]string
 }
 
 func (state DialogState) Update(game *Game) {
@@ -17,19 +17,19 @@ func (state DialogState) Update(game *Game) {
 }
 
 func (state DialogState) Draw(game *Game) {
-	bl := pixel.V(INSET_SIZE + DIALOG_MARGIN, WINDOW_HEIGHT - DIALOG_HEIGHT - DIALOG_HEIGHT)
-	tr := pixel.V(WINDOW_WIDTH - INSET_SIZE - DIALOG_MARGIN, WINDOW_HEIGHT - DIALOG_HEIGHT)
+	bl := pixel.V(INSET_SIZE+DIALOG_MARGIN, WINDOW_HEIGHT-DIALOG_HEIGHT-DIALOG_HEIGHT)
+	tr := pixel.V(WINDOW_WIDTH-INSET_SIZE-DIALOG_MARGIN, WINDOW_HEIGHT-DIALOG_HEIGHT)
 	DrawPanel(game.win, bl, tr)
 
 	for index, line := range state.Pages[*state.CurrentPage] {
 		offset := index * (DIALOG_TEXT_GAP + DIALOG_TEXT_HEIGHT)
-		textLocation := pixel.V(bl.X + DIALOG_PADDING, tr.Y - float64(DIALOG_TEXT_HEIGHT)- float64(DIALOG_PADDING) - float64(offset))
+		textLocation := pixel.V(bl.X+DIALOG_PADDING, tr.Y-float64(DIALOG_TEXT_HEIGHT)-float64(DIALOG_PADDING)-float64(offset))
 		DrawText(game.win, line, textLocation, pixel.IM.Scaled(textLocation, 2.0))
 	}
 
 	prompt := "Press Enter To Continue"
-	promptLocation := pixel.V(bl.X + DIALOG_PADDING, bl.Y + (DIALOG_PADDING / 4.0))
-	if *state.CurrentPage == len(state.Pages) - 1 {
+	promptLocation := pixel.V(bl.X+DIALOG_PADDING, bl.Y+(DIALOG_PADDING/4.0))
+	if *state.CurrentPage == len(state.Pages)-1 {
 		prompt = "Press Enter To Close"
 	}
 	DrawText(game.win, prompt, promptLocation, pixel.IM)
@@ -37,20 +37,20 @@ func (state DialogState) Draw(game *Game) {
 
 func (state DialogState) HandleInputs(game *Game) {
 	if game.win.JustPressed(pixelgl.KeyEnter) {
-		if *state.CurrentPage == len(state.Pages) - 1 {
+		if *state.CurrentPage == len(state.Pages)-1 {
 			game.GameStates.Pop()
 		} else {
 			*state.CurrentPage++
 		}
-  }
+	}
 }
 
 func NewDialogState(message string) DialogState {
 	currentPageIndex := 0
 	state := DialogState{
 		CurrentPage: &currentPageIndex,
-		Message: message,
-		Pages: make([][]string, 0),
+		Message:     message,
+		Pages:       make([][]string, 0),
 	}
 	dialogWidth := (WINDOW_WIDTH - INSET_SIZE - DIALOG_MARGIN) - (INSET_SIZE + DIALOG_MARGIN)
 	maxLinesPerPage := (DIALOG_HEIGHT - (DIALOG_PADDING * 2)) / (DIALOG_TEXT_GAP + DIALOG_TEXT_HEIGHT)
@@ -75,10 +75,10 @@ func NewDialogState(message string) DialogState {
 			state.Pages = append(state.Pages, currentPage)
 			currentRow = ""
 			currentPage = make([]string, 0)
-			
+
 			continue
 		}
-		if len(currentRow) + wordLen < maxCharPerLine {
+		if len(currentRow)+wordLen < maxCharPerLine {
 			if len(currentRow) > 0 {
 				currentRow = currentRow + " "
 			}
