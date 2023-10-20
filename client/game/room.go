@@ -380,6 +380,53 @@ func (room *Room) DrawObjects(target pixel.Target) {
 
 func (room *Room) CalcColliders() []Collider {
 	colliders := make([]Collider, 0)
+	partialWallWidth := float64(WINDOW_WIDTH/2 - DOOR_WIDTH/2)
+	partialWallHeight := float64(WINDOW_MID_HEIGHT - DOOR_HALF_WIDTH)
+
+	if room.HasUpDoor() {
+		colliders = append(colliders, []Collider{
+			NewRectCollider(partialWallWidth-partialWallWidth/2, WINDOW_HEIGHT-INSET_SIZE/2, partialWallWidth, INSET_SIZE),
+			NewRectCollider(partialWallWidth+DOOR_WIDTH+partialWallWidth/2, WINDOW_HEIGHT-INSET_SIZE/2, partialWallWidth, INSET_SIZE),
+		}...)
+	} else {
+		colliders = append(colliders, []Collider{
+			NewRectCollider(WINDOW_WIDTH/2, WINDOW_HEIGHT-INSET_SIZE/2, WINDOW_WIDTH, INSET_SIZE),
+		}...)
+	}
+
+	if room.HasDownDoor() {
+		colliders = append(colliders, []Collider{
+			NewRectCollider(partialWallWidth-partialWallWidth/2, INSET_SIZE/2, partialWallWidth, INSET_SIZE),
+			NewRectCollider(partialWallWidth+DOOR_WIDTH+partialWallWidth/2, INSET_SIZE/2, partialWallWidth, INSET_SIZE),
+		}...)
+	} else {
+		colliders = append(colliders, []Collider{
+			NewRectCollider(WINDOW_WIDTH/2, INSET_SIZE/2, WINDOW_WIDTH, INSET_SIZE),
+		}...)
+	}
+
+	if room.HasLeftDoor() {
+		colliders = append(colliders, []Collider{
+			NewRectCollider(INSET_SIZE/2, partialWallHeight/2, INSET_SIZE, partialWallHeight),
+			NewRectCollider(INSET_SIZE/2, WINDOW_HEIGHT-partialWallHeight/2, INSET_SIZE, partialWallHeight),
+		}...)
+	} else {
+		colliders = append(colliders, []Collider{
+			NewRectCollider(INSET_SIZE/2, WINDOW_HEIGHT/2, INSET_SIZE, WINDOW_HEIGHT),
+		}...)
+	}
+
+	if room.HasRightDoor() {
+		colliders = append(colliders, []Collider{
+			NewRectCollider(WINDOW_WIDTH-INSET_SIZE/2, partialWallHeight/2, INSET_SIZE, partialWallHeight),
+			NewRectCollider(WINDOW_WIDTH-INSET_SIZE/2, WINDOW_HEIGHT-partialWallHeight/2, INSET_SIZE, partialWallHeight),
+		}...)
+	} else {
+		colliders = append(colliders, []Collider{
+			NewRectCollider(WINDOW_WIDTH-INSET_SIZE/2, WINDOW_HEIGHT/2, INSET_SIZE, WINDOW_HEIGHT),
+		}...)
+	}
+
 	return colliders
 }
 

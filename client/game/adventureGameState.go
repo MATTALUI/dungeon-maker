@@ -128,21 +128,16 @@ func (state AdventureGameState) HandleInputs(game *Game) {
 }
 
 func (state AdventureGameState) CheckHeroMovement(game *Game, targetLocation pixel.Vec) bool {
-	canMove := true
-	withinHorizontalDoorRange := (targetLocation.Y >= WINDOW_MID_HEIGHT-DOOR_HALF_WIDTH+TILE_HALF &&
-		targetLocation.Y <= WINDOW_MID_HEIGHT+DOOR_HALF_WIDTH-TILE_HALF)
-	withinVerticalDoorRange := (targetLocation.X >= WINDOW_MID_WIDTH-DOOR_HALF_WIDTH+TILE_HALF &&
-		targetLocation.X <= WINDOW_MID_WIDTH+DOOR_HALF_WIDTH-TILE_HALF)
+	for _, collider := range game.CurrentRoom.CalcColliders() {
+		heroBaseCollider := game.hero.Collider
+		heroBaseCollider.Position.X = targetLocation.X
+		heroBaseCollider.Position.Y = targetLocation.Y
+		if CheckCollision(heroBaseCollider, collider) {
+			return false
+		}
+	}
 
-	canMove = canMove && targetLocation.X >= INSET_SIZE+TILE_HALF || ( // Not too far left
-	game.CurrentRoom.HasLeftDoor() && withinHorizontalDoorRange)       // Or is in range of left door
-	canMove = canMove && targetLocation.X <= WINDOW_WIDTH-INSET_SIZE-TILE_HALF || ( // Not too far right
-	game.CurrentRoom.HasRightDoor() && withinHorizontalDoorRange)                   // Or is in range of right door
-	canMove = canMove && targetLocation.Y >= INSET_SIZE+TILE_HALF || ( // Not too far down
-	game.CurrentRoom.HasDownDoor() && withinVerticalDoorRange)         // Or is in range of bottom door
-	canMove = canMove && targetLocation.Y <= WINDOW_HEIGHT-INSET_SIZE-TILE_HALF || (game.CurrentRoom.HasUpDoor() && withinVerticalDoorRange) // Not too far up
-
-	return canMove
+	return true
 }
 
 func (state AdventureGameState) ManageRoomChange(game *Game) {
