@@ -124,7 +124,7 @@ type Dungeon struct {
 // This class is used when building a JSON version of a dungeon; it does not
 // have cyclical structures.
 type DungeonRepr struct {
-	StartingRoom RoomRepr            `json:StartingRoom`
+	StartingRoom RoomRepr            `json:"StartingRoom"`
 	Rooms        []RoomRepr          `json:"rooms"`
 	RoomIndex    map[string]RoomRepr `json:"index"`
 }

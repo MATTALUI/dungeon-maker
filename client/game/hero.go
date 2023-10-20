@@ -29,7 +29,7 @@ func NewHero() Hero {
 	hero.MaxHealth = 200
 	hero.Health = 100
 
-	hero.Collider = NewRectCollider(hero.Location.X, hero.Location.Y-HERO_COLLIDER_OFFSET, 20, 30)
+	hero.Collider = NewRectCollider(hero.Location.X, hero.Location.Y, 20, 30)
 
 	return hero
 }
@@ -73,5 +73,5 @@ func (hero *Hero) Up() {
 
 func (hero *Hero) UpdateColliderPosition() {
 	hero.Collider.Position.X = hero.Location.X
-	hero.Collider.Position.Y = hero.Location.Y - HERO_COLLIDER_OFFSET
+	hero.Collider.Position.Y = hero.Location.Y
 }

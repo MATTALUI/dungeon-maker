@@ -18,7 +18,7 @@ const (
 	DEBUG                = true
 	TILE_SIZE            = 32
 	WINDOW_WIDTH         = 900
-	WINDOW_HEIGHT        = 700
+	WINDOW_HEIGHT        = 708
 	GAME_NAME            = "Danger Dungeon"
 	DOOR_WIDTH           = TILE_SIZE * 4
 	INSET_SIZE           = 50

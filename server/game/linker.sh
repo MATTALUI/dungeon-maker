@@ -30,4 +30,5 @@ ln -s ../../client/game/dijkstra.go ./dijkstra.go
 ln -s ../../client/game/pathPreview.go ./pathPreview.go
 ln -s ../../client/game/treasure.go ./treasure.go
 ln -s ../../client/game/collider.go ./collider.go
+ln -s ../../client/game/tiler.go ./tiler.go
 echo "The deed is done"

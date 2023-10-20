@@ -67,6 +67,7 @@ func NewRoom() Room {
 	room := Room{}
 	room.Id = uuid.NewString()
 	room.Loot = make([]TreasureChest, 0)
+	room.TileBatch = BuildTestBatch()
 
 	return room
 }
@@ -104,6 +105,8 @@ type Room struct {
 	Dimensions Dimension
 	Coords     Coordinates
 	Loot       []TreasureChest
+
+	TileBatch *pixel.Batch
 }
 
 // This class is used when building a JSON version of a dungeon; it does not
@@ -266,6 +269,7 @@ func (room *Room) Draw(target pixel.Target) {
 	bottomLeft := pixel.V(INSET_SIZE, INSET_SIZE)
 	topRight := pixel.V(WINDOW_WIDTH-INSET_SIZE, WINDOW_HEIGHT-INSET_SIZE)
 	DrawRect(target, colornames.Darkslategray, bottomLeft, topRight)
+	room.TileBatch.Draw(target)
 
 	if room.HasUpDoor() { // TOP
 		DrawRect(target, colornames.Darkslategray, doorCoords[UP][0], doorCoords[UP][1])
