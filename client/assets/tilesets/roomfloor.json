@@ -1,0 +1,200 @@
+{
+  "file": "roomfloor.png",
+  "tiles": [
+    {
+      "id": "pit-bl",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [7, 10, 3],
+        "left": [-1, 13, 14],
+        "bottom": [-1, 13, 14],
+        "right": [1, 5, 10]
+      }
+    },
+    {
+      "id": "pit-br",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [2, 6, 11],
+        "left": [0,5, 11],
+        "bottom": [-1, 13, 14],
+        "right": [-1, 13, 14]
+      }
+    },
+    {
+      "id": "pit-tr",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [-1, 13, 14],
+        "left": [8, 4, 3],
+        "bottom": [6, 1, 8],
+        "right": [-1, 13, 14]
+      }
+    },
+    {
+      "id": "pit-tl",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [-1, 13, 14],
+        "left": [-1, 13, 14],
+        "bottom": [9, 7, 1],
+        "right": [9, 5, 2]
+      }
+    },
+    {
+      "id": "pit-top",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [-1, 13, 14],
+        "left": [3, 4, 8],
+        "bottom": [5, 10, 11, 12],
+        "right": [9, 4, 2]
+      }
+    },
+    {
+      "id": "pit-btm",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [8, 9, 12, 4],
+        "left": [11, 5, 0],
+        "bottom": [-1, 13, 14],
+        "right": [10, 5, 2]
+      }
+    },
+    {
+      "id": "pit-rit",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [2, 6, 11],
+        "left": [7, 9, 10, 12],
+        "bottom": [1,6,8],
+        "right": [-1, 13, 14]
+      }
+    },
+    {
+      "id": "pit-lft",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [10, 7, 3],
+        "left": [-1, 13, 14],
+        "bottom": [9, 7, 0],
+        "right": [8, 11, 12, 6]
+      }
+    },
+    {
+      "id": "edge-bl",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [2, 6, 11],
+        "left": [7, 9, 10, 12],
+        "bottom": [12,11,10,5],
+        "right": [9, 4, 2]
+      }
+    },
+    {
+      "id": "edge-br",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [10, 8, 3],
+        "left": [8, 4, 4],
+        "bottom": [5, 10, 11, 12],
+        "right": [6, 8, 11, 12]
+      }
+    },
+    {
+      "id": "edge-tr",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [9, 8, 5, 12],
+        "left": [0, 5, 11],
+        "bottom": [9, 7, 0],
+        "right": [6, 8,11,12]
+      }
+    },
+    {
+      "id": "edge-tl",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [4,8,9,12],
+        "left": [7,9,10,12],
+        "bottom": [1, 7, 8],
+        "right": [1, 5, 10]
+      }
+    },
+    {
+      "id": "pit",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [12, 9, 8, 4],
+        "left": [12, 7, 9, 10],
+        "bottom": [12, 5, 10, 11],
+        "right": [12, 11, 8 , 6]
+      }
+    },
+    {
+      "id": "spec1",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [-1, 13, 14, 0, 1, 5],
+        "left": [-1, 13, 14, 1, 2, 6],
+        "bottom": [-1, 13, 14, 2, 3, 4],
+        "right": [-1, 13, 14,0, 3,7]
+      }
+    },
+    {
+      "id": "spec2",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "sockets": {
+        "top": [-1, 13, 14, 0, 1, 5],
+        "left": [-1, 13, 14, 1, 2, 6],
+        "bottom": [-1, 13, 14, 2, 3, 4],
+        "right": [-1, 13, 14,0, 3,7]
+      }
+    }
+  ]
+}
