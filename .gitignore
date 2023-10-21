@@ -1,2 +1,4 @@
 client/dungeon-maker
 server/dungeon-maker-server
+tools/dungeon-maker-tools
+tools/tilesheetbuilder

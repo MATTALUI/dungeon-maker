@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Dungeon Maker Tools | Build Tilesheet</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      background-color: #eeeeee;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    header {
+      padding: 0.5rem 1rem;
+      color: #eeeeee;
+      background-color: darkslategray;
+    }
+
+    h1>a {
+      color: #eeeeee;
+      text-decoration: none;
+
+    }
+
+    main {
+      padding: 0.5rem 1rem;
+      font-size: 1.3rem;
+    }
+
+    a {
+      color: darkslategray;
+      text-decoration: none;
+    }
+
+    img {
+      width: 128px;
+      height: 128px;
+      border: 1px solid rgba(0, 0, 0, 0.69);
+    }
+
+    .framePreview {
+      float: left;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 128px);
+      grid-template-rows: repeat(3, 128px);
+      border: 1px solid rgba(0, 0, 0, 0.69);
+      border-radius: 1rem;
+    }
+
+    #build {
+      display: flex;
+      justify-content: center;
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+  </style>
+  <script defer>
+    (async () => {
+      const id = window.location.pathname.split('/')[2];
+      const req = await fetch(`/api/tilesheetbuilder/${id}`);
+      const project = await req.json();
+      const tileset = {
+        file: project.filename,
+        tiles: [],
+      };
+      project.imageSlices.forEach(({ b64Image: src }) => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.classList.add("framePreview")
+        document.querySelector("#frames").appendChild(img);
+      });
+      const grid = document.createElement("div");
+      grid.classList.add("grid");
+      document.querySelector("#build").appendChild(grid);
+      new Array(9).fill().forEach(() => {
+        const cell = document.createElement("div");
+        grid.appendChild(cell);
+        cell.classList.add("cell")
+      });
+
+      const socketsGridIndex = [1, 3, 7, 5];
+      const sockets = ["top", "left", "bottom", "right"];
+      let socketIndex = 0;
+      let currentTileIndex = 0;
+      let comparisonIndex = 0;
+
+      const displayNextSocketOption = () => {
+        document.querySelectorAll(".cell > img").forEach((i) => {
+          i.remove()
+        });
+        const focusImage = document.createElement("img");
+        focusImage.src = project.imageSlices[currentTileIndex].b64Image;
+        document.querySelector(".grid").childNodes[4].appendChild(focusImage);
+        const gridIndex = socketsGridIndex[socketIndex];
+
+        const comparisonImage = document.createElement("img");
+        comparisonImage.src = project.imageSlices[comparisonIndex].b64Image;
+        document.querySelector(".grid").childNodes[gridIndex].appendChild(comparisonImage);
+      }
+      displayNextSocketOption()
+      const safelyGetTile = () => {
+        if (!tileset.tiles[currentTileIndex]) {
+          tileset.tiles[currentTileIndex] = {
+            id: "pit-tr",
+            x: project.imageSlices[currentTileIndex].x,
+            y: project.imageSlices[currentTileIndex].y,
+            width: project.imageSlices[currentTileIndex].width,
+            height: project.imageSlices[currentTileIndex].height,
+            sockets: {
+              top: [],
+              left: [],
+              bottom: [],
+              right: []
+            }
+          };
+        }
+        const tile = tileset.tiles[currentTileIndex];
+
+        return tile;
+      }
+
+
+      const publishTileset = async () => {
+        console.log("publishTileset");
+        const req = await fetch(`/api/tilesheetbuilder/${project.id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            tilesheet: JSON.stringify(tileset),
+          }),
+        });
+        const savePath = await req.text();
+        alert(`file://${savePath}`);
+      }
+
+      const setupNextSocketOption = () => {
+        // Increment the comparison index
+        comparisonIndex++;
+        // Move to the next socket if we've compared all of the images
+        if (comparisonIndex === project.imageSlices.length) {
+          comparisonIndex = 0;
+          socketIndex++;
+        }
+        // Move to the next tile if we've filled all of the sockets
+        if (socketIndex === sockets.length) {
+          socketIndex = 0;
+          currentTileIndex++;
+        }
+        // If we've finished all the tiles we're done!
+        if (currentTileIndex === project.imageSlices.length) {
+          currentTileIndex = 0;
+          document.querySelector('#good').setAttribute('disabled', "true");
+          const bad = document.querySelector('#bad');
+          bad.setAttribute('disabled', 'true');
+          const publish = document.createElement("button");
+          publish.innerHTML = "publish";
+          publish.addEventListener("click", publishTileset)
+          bad.parentElement.appendChild(publish);
+        }
+      }
+
+      const markGood = (event) => {
+        console.log("good");
+        const tile = safelyGetTile();
+        tile.sockets[sockets[socketIndex]].push(comparisonIndex);
+        setupNextSocketOption();
+        displayNextSocketOption();
+      }
+
+      const markBad = (event) => {
+        console.log("bad");
+        safelyGetTile();
+        setupNextSocketOption();
+        displayNextSocketOption();
+      }
+
+      document.querySelector("#good").addEventListener("click", markGood);
+      document.querySelector("#bad").addEventListener("click", markBad);
+      console.log(project);
+    })();
+  </script>
+</head>
+
+<body>
+  <header>
+    <h1>
+      <a href="/">
+        Dungeon Maker Tools
+      </a>
+    </h1>
+  </header>
+  <main>
+    <div>
+      <h2>Build</h2>
+      <div id="build">
+        <div>
+          <button id="good">Good</button>
+          <button id="bad">Bad</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2>Frames</h2>
+      <div id="frames"></div>
+    </div>
+  </main>
+</body>
+
+</html>
