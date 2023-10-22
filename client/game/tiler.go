@@ -4,8 +4,6 @@ import (
 	"github.com/faiface/pixel"
 )
 
-
-
 func BuildTestBatch() *pixel.Batch {
 	testTileSprite, _ := loadPicture("assets/tilesets/test.png")
 	batch := pixel.NewBatch(&pixel.TrianglesData{}, testTileSprite)
