@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	MAX_ROOMS = 6 //69
-	MIN_ROOMS = 5 //25
+	MAX_ROOMS = 69
+	MIN_ROOMS = 25
 )
 
 func init() {
@@ -21,7 +21,7 @@ func init() {
 func GenerateDungeon() Dungeon {
 	dungeon := Dungeon{}
 	dungeon.RoomRegister = make(map[string]*Room)
-	numberOfRooms := rand.Intn(MAX_ROOMS) + MIN_ROOMS // We want a min of 1
+	numberOfRooms := 0 //rand.Intn(MAX_ROOMS) + MIN_ROOMS // We want a min of 1
 
 	room := NewRoom()
 	room.IsFirstRoom = true

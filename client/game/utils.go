@@ -146,3 +146,17 @@ func DrawEntrance(target pixel.Target, direction string) {
 func CalculateMidPoint(p1 pixel.Vec, p2 pixel.Vec) pixel.Vec {
 	return pixel.V((p1.X+p2.X)/2, (p1.Y+p2.Y)/2)
 }
+
+func GetSliceIntersections(s1 []int, s2 []int) []int {
+	intersection := make([]int, 0)
+	for _, num1 := range s1 {
+		for _, num2 := range s2 {
+			if num1 == num2 {
+				intersection = append(intersection, num1)
+				break
+			}
+		}
+	}
+
+	return intersection
+}
